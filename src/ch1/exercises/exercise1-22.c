@@ -21,11 +21,22 @@ main(){
 		++i;
 	}
 
+	/* This won't get ran until you stop input wiht ctrl+d */
 	for (a = 0; a < i; a++){
-		printf("%d\n", output[a]);
+		putchar(output[a]);
 	}	
 }
 
 int getlines(char line[], int limit){
 
+	int m, c;
+	for (m = 0; m < limit && (c = getchar()) != EOF && c != '\n'; ++m){		
+		line[m] = c;
+	}
+	if (c == '\n'){
+		line[m] == c;
+		++c;
+	}
+	line[m] = '\0';
+	return m;	
 }
