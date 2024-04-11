@@ -9,11 +9,11 @@ main(){
 	/* Write line in a buffer, so if you have to backtrack to get to previous blank at line input,
 	 * you can read from the buffer. */	
 
-	int c, i, b, a, l;
+	int c, i, b, a, l, s;
 	char output[MAXLINE];
 	char buffer[MAXLINE];
 
-	i = l = 0;
+	i = l = b = 0;
 	int previousBlank = 0;
 	int lastNonBlank;
 
@@ -23,18 +23,31 @@ main(){
 		if (previousBlank == 0 && (c == ' ' || c == '\t')){
 			lastNonBlank = i - 1;
 			previousBlank = 1;
+			buffer[i] = c;
+			++b;
+		} else if (c == ' ' || c == '\t') {
+			buffer[i] = c;
+			++b;
 		} else {
 			lastNonBlank = i;
 			previousBlank = 0;
+			output[i] = c;
+			b = 0;
+			++i;
 		}	
-		if (l == LINELENGTH){
+		if (l == LINELENGTH && previousBlank == 0){
+			output[lastNonBlank] = '\n';
+			++i;
+			l = 0;
+		} else if (l == LINELENGTH && previousBlank == 1){
+			for (s = 0; s < b; s++){
+				output[i] = buffer[s];
+				++i;
+			}
 			output[lastNonBlank] = '\n';
 			++i;
 			l = 0;
 		}
-		output[i] = c;
-		buffer[i] = c;
-		++i;
 		++l;
 	}
 
