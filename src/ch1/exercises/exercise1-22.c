@@ -23,32 +23,21 @@ main(){
 		if (previousBlank == 0 && (c == ' ' || c == '\t')){
 			lastNonBlank = i - 1;
 			previousBlank = 1;
-			buffer[i] = c;
-			++b;
+			++l;
 		} else if (c == ' ' || c == '\t') {
-			buffer[i] = c;
-			++b;
+			++l;
 		} else {
 			lastNonBlank = i;
 			previousBlank = 0;
 			output[i] = c;
-			b = 0;
 			++i;
+			++l;
 		}	
-		if (l == LINELENGTH && previousBlank == 0){
-			output[lastNonBlank] = '\n';
-			++i;
-			l = 0;
-		} else if (l == LINELENGTH && previousBlank == 1){
-			for (s = 0; s < b; s++){
-				output[i] = buffer[s];
-				++i;
-			}
+		if (l == LINELENGTH){
 			output[lastNonBlank] = '\n';
 			++i;
 			l = 0;
 		}
-		++l;
 	}
 
 	/* This won't get ran until you stop input wiht ctrl+d */
