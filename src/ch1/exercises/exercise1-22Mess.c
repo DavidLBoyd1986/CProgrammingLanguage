@@ -9,39 +9,17 @@ main(){
 	/* Write line in a buffer, so if you have to backtrack to get to previous blank at line input,
 	 * you can read from the buffer. */	
 
-	int len;
-	char inputLine[MAXLINE];
-	char outputLine[MAXLINE];
+	int c, i, b, a, l, s;
+	char output[MAXLINE];
+	char buffer[MAXLINE];
 
-	while ((len = getlines(inputLine, MAXLINE)) > 0){
-		printf("%s\n", inputLine);
-		printf("%i\n", len);
-	}
-	
-}
+	i = l = b = 0;
+	int previousBlank = 0;
+	int lastNonBlank;
 
-int foldlines(char line[], int l){
-	int i, j;
-	for(i = 0, j = 0; i < l; ++i, ++j){
-		
-	}
-}
-
-int getlines(char line[], int limit){
-
-	int m, c;
-	for (m = 0; m < limit && (c = getchar()) != EOF && c != '\n'; ++m){		
-		line[m] = c;
-	}
-	if (c == '\n'){
-		line[m] == c;
-		++c;
-	}
-	line[m] = '\0';
-	return m;	
-}
-
-/*
+	while ((c = getchar()) != EOF){
+		/* fold long lines into two or more lines shorter lines after the last non-blank character
+		 * that occurs before the n-th column of input. For really long lines force break the line */
 		if (previousBlank == 0 && (c == ' ' || c == '\t')){
 			lastNonBlank = i - 1;
 			previousBlank = 1;
@@ -74,7 +52,22 @@ int getlines(char line[], int limit){
 		}
 	}
 
+	/* This won't get ran until you stop input wiht ctrl+d */
 	for (a = 0; a < i; a++){
 		putchar(output[a]);
-	} 
-*/
+	}	
+}
+
+int getlines(char line[], int limit){
+
+	int m, c;
+	for (m = 0; m < limit && (c = getchar()) != EOF && c != '\n'; ++m){		
+		line[m] = c;
+	}
+	if (c == '\n'){
+		line[m] == c;
+		++c;
+	}
+	line[m] = '\0';
+	return m;	
+}
