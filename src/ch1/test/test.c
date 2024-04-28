@@ -24,10 +24,12 @@ int main()
 	printf("-------------\n");
 	int arraySize = 20;
 	int testArray[arraySize];
-	for (int t = 0; t < arraySize; t++){
+	int numOfInputs = 0;
+	for (int t = 0; t < 11; t++){
 		testArray[t] = t;
+		numOfInputs++;
 	}
-	printArray(testArray, arraySize);
+	printArray(testArray, numOfInputs);
 	return 0;
 
 }
