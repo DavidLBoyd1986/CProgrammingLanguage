@@ -12,8 +12,7 @@ int main(void)
 	char str[MAXSTR];
 
 	get_str(str, MAXSTR);
-	FILE *in_file = fopen("/home/david/Projects/CProgrammingLanguage/src/ch1/exercises/testFile.c");
-	check_syntax(in_file);
+	check_syntax(str);
 
 	return 0;
 }
