@@ -103,6 +103,13 @@ void check_syntax(char str[])
 		++i;
 	}
 
+	printf("Parentheses %d \n", parentheses);
+	printf("Brackets %d \n", brackets);
+	printf("Braces %d \n", braces);
+	printf("single_quotes %d \n", single_quotes);
+	printf("double_quotes %d \n", double_quotes);
+	printf("block_comment %d \n", block_comment);
+
 	// Error reporting if anything was unbalanced
 	if (parentheses){
 		printf("Error: unbalanced parenthesis.\n");
