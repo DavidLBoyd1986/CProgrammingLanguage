@@ -50,6 +50,7 @@ void check_syntax(char str[])
 		if (!line_comment && !block_comment && !single_quotes && !double_quotes){
 			if (str[i] == '('){
 				++parentheses;
+				//printf("%d \n", parentheses);
 			} else if (str[i] == ')'){
 				--parentheses;
 			}
