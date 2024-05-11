@@ -43,11 +43,13 @@ void check_syntax(char str[])
 	int line_comment = FALSE;
 
 	int i = 0;
-
+	
 	while (str[i] != '\0' && parentheses >= 0 && brackets >= 0 && braces >= 0){
+
 
 		// Checks for balance of parenthesis, brackets, and braces
 		if (!line_comment && !block_comment && !single_quotes && !double_quotes){
+			
 			if (str[i] == '('){
 				++parentheses;
 			} else if (str[i] == ')'){
