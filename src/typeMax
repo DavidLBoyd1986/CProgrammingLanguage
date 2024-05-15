@@ -1,0 +1,12 @@
+
+int max
+2147483647
+
+int min
+-2147483648
+
+short int max
+32767
+
+short int min 
+-32768
