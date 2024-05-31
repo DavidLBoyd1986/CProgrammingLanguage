@@ -82,4 +82,14 @@ void main(){
 		test_unsigned_int_max++;
 		n++;
 	}
+
+	n = 0;
+	printf("\nStopa at 'char' max\n");
+	while (n < 300){
+		char c = n;
+		printf("%i = %c, ", n, c);
+		n++;
+	}
+	printf("\nChar seems to be 256 bits it loops back after that.\n");
+
 }

@@ -10,3 +10,6 @@ short int max
 
 short int min 
 -32768
+
+char
+256 bits - Starts over after 256 bits

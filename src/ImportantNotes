@@ -1,0 +1,9 @@
+
+path to plain text header files:
+/usr/include/
+
+Important Headers:
+- stdio.h
+- stdlib.h
+- limits.h
+- float.h
