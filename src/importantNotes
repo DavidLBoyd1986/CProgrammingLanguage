@@ -7,3 +7,24 @@ Important Headers:
 - stdlib.h
 - limits.h
 - float.h
+
+Format Specifiers:
+-  %c           - char
+-  %d           - signed integer
+-  %e or %E     - float - Scientific Notation
+-  %f           - float 
+-  %g or %G     - float with current precision
+-  %i           - unsigned integer
+-  %ld or %li   - long
+-  %lf          - double
+-  %Lf          - long double
+-  %lu          - unsigned int or unsigned long
+-  %lli or %lld - long long
+-  %llu         - unsigned long long
+-  %o           - Octal representation
+-  %p           - pointer
+-  %s           - string
+-  %u           - unsigned int
+-  %x or %X     - Hexadecimal representation
+-  %n           - Prints nothing
+-  %%           - Prints % character
