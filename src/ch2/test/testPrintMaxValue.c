@@ -6,6 +6,7 @@
 void main(){
 
 	//printf(CHAR_MIN);
+	printf("Float Type");
 	float testfloat = 10.5;
 	printf("%f\n\n", testfloat);
 
@@ -15,4 +16,15 @@ void main(){
 	testThree=testOne+testTwo;
 	printf("%f + %f = %f", testOne, testTwo, testThree);
 
+	long testLong = 1234;
+
+	printf("\nlong is : %li", testLong);
+
+	double testDouble = 13245;
+
+	printf("\ndouble is : %lf", testDouble);
+
+	float negativeFloat = -3332221111;
+
+	printf("\nfloat is : %g", negativeFloat);
 }

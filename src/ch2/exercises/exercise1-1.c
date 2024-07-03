@@ -128,9 +128,10 @@ void main(){
         printf("Unsigned long long int Max: %llu\n", ULLONG_MAX);
         printf("Unsigned long long int Min: %d\n\n", 0); //ULLONG_MIN is not defined but in the limits.h file, but it says that it is 0
 
-	printf("float Max = %.10e\n", FLT_MAX);
-	printf("float Min = %.10e\n", FLT_MIN);
-	printf("The number of digits in the number = %.10e\n", FLT_MANT_DIG);
+	printf("float Max : Scientific Notation output = %.10e\n", FLT_MAX);
+	printf("float Min : Scientific Notation output = %.10e\n", FLT_MIN);
+	printf("float Max : Float output = %f\n", FLT_MAX);
+	printf("float Min : Float output = %f\n", FLT_MIN);
 
 ///-------------------------------------------------------------------
 }
