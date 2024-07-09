@@ -1,9 +1,9 @@
 #include <stdio.h>
 
 int main() {
-	float testFloat = 1;
+	float testFloat =.0001;
 
-	for(float f = -16700000; f < 0; f = f - testFloat){
+	for(float f = -167.3456; f < 0; f = f + testFloat){
 		printf("float f = %f\n", f);
 	}
 	
