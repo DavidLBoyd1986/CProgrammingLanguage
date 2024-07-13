@@ -1,0 +1,7 @@
+
+
+string.h Functions:
+
+	int strlen(char s[])
+
+

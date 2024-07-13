@@ -1,0 +1,111 @@
+-------------------------------------------------------------------------
+
+INTEGER CONSTANTS:
+-----------------
+
+Binary, Octal and Hexadecimal Formats:
+--------------------------------------
+
+Binary:
+------
+
+Variables that start with a leading '0b' will be lists in Binary Format:
+
+	const int testBinary = 0b1010101;
+
+
+Octal:
+-----
+
+Variables that start with a leading 0 use their octal value:
+
+	const int testOctal = 077;
+
+Don't get confused when printing these values.
+
+If you print using octal format, it will show as octal, and any other integer value (int, long, etc...) will show as the integer value
+
+
+Hexadecimal:
+-----------
+
+Variables that start with a leading '0x' will be the hexadecimal value:
+
+	cont int testHex = 0xff;
+
+
+
+Trailing Type Specifications:
+----------------------------
+
+1234U = Unsigned Integer
+
+132456L = Long Integer
+
+14356UL = Unsigned Long Integer
+
+
+This is a way to determine the Type of constants used in equations.
+
+testVar = 12345U - 123456U;
+
+
+-------------------------------------------------------------------------
+
+CHAR CONSTANTS:
+--------------
+Written like this with single quotes:
+
+	char constant verticalTab = '\013';
+
+Print the char value (symbol) with the %c value, otherwise it prints the numerical value of the system's character set
+
+	printf("Prints a Vertical Tab: %c:", verticalTab);
+
+For some reason it requires the leading '\0' to work as a char value.
+
+-------------------------------------------------------------------------
+
+STRING CONSTANTS:
+----------------
+
+Sequence of Chars enclosed in double quotes " ".
+
+String stringConstant = "Hello, World";
+
+Strings always end in a '\0' char.
+
+Single Quotes 'x' is the integer value for the char.
+
+Double Quotes "x" is the char itself.
+
+"xcvd" - An Array of chars.
+
+------------------------------------------------------
+
+ENUM CONSTANTS:
+--------------
+
+Enums are a list of constant integer values.
+
+The first value in an enum is '0', second '1', and continue incrementing by one thereafter.
+
+Example:
+
+enum boolean { NO, YES };
+
+For above variable named 'boolean':
+NO = 0;
+YES = 1;
+
+
+
+RESEARCH:
+--------
+
+Why does the book say they start with \ and use ' ' like so '\000' or '\xhh'
+
+See above for why Char Constants require '\0', still need to test '\x' for hexadecimal
+
+
+
