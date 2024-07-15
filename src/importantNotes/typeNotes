@@ -1,0 +1,24 @@
+
+Type Notes:
+
+
+Chars and String:
+
+char charNum = 35;
+char charChar = 'g';
+char charArray[250] = "Test String";
+
+
+Float:
+
+Always use Double and not Float.
+
+Float loses precision easily as numbers get even slightly big.
+
+
+Boolean:
+
+_Bool testTrue = 4;
+_Bool testFalse = 0;
+
+_Bool will evaluate 0 to False, and all other Ints to True.

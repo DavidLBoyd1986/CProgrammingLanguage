@@ -8,11 +8,6 @@ Important Headers:
 - limits.h
 - float.h
 
-Types:
-int varIntName = 8;
-char varCharName = 35;
-char varCharArrayName[250] = "Test String";
-
 
 Format Specifiers:
 -  %c           - char
