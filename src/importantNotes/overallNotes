@@ -3,11 +3,11 @@ path to plain text header files:
 /usr/include/
 
 Important Headers:
-- stdio.h
-- stdlib.h
-- limits.h
-- float.h
-
+- stdio.h    - provides input and output functions
+- stdlib.h   - provides ?????
+- limits.h   - defines the max size of different types
+- float.h    - functions for float
+- ctype.h    - functions for tests and conversions of Types and Characters
 
 Format Specifiers:
 -  %c           - char
