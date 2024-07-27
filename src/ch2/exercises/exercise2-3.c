@@ -3,9 +3,28 @@
 
 #define HEX_BASE 16; /* Hex Base */
 
+int htoi(char hex_string[]);
+
 int main() {
 
-	char hex_string[50] = "3d4f";
+	char hex_string_test_one[50] = "3d4f";
+	char hex_string_test_two[50] = "0xe3d4f";
+	char hex_string_test_three[50] = "0Xbc3d4f";
+	
+	int hex_value_test_one = htoi(hex_string_test_one);
+	int hex_value_test_two = htoi(hex_string_test_two);
+	int hex_value_test_three = htoi(hex_string_test_three);
+
+	printf("\nHex Value: %s\n", hex_string_test_one);
+	printf("Hex Value: %lli\n", hex_value_test_one);
+	printf("\nHex Value: %s\n", hex_string_test_two);
+	printf("Hex Value: %lli\n", hex_value_test_two);
+	printf("\nHex Value: %s\n", hex_string_test_three);
+	printf("Hex Value: %lli\n", hex_value_test_three);
+}
+
+int htoi(char hex_string[]){
+
 	int str_length = strlen(hex_string);
 	
 	int i;
@@ -14,11 +33,16 @@ int main() {
 
 	int hex_multiplier = 1;
 
-
-	printf("\n Hex String: %s", hex_string);
-
 	for (i = str_length - 1; i >= 0; i--){
-		
+	
+		//Check for optional leading 'ox' or'Ox'
+		if (hex_string[i] == 'x') {
+			break;
+		} else if (hex_string[i] == 'X') {
+			break;
+		}
+
+		// Determine value of character
 		if (hex_string[i] == '0') {
 			temp_str_value = hex_multiplier * 0;
 		} else if (hex_string[i] == '1') {
@@ -59,5 +83,5 @@ int main() {
 		hex_multiplier = hex_multiplier * 16;
 		str_value += temp_str_value;
 	}
-	printf("\nHex String Value: %lli\n", str_value);	
+	return str_value;	
 }
