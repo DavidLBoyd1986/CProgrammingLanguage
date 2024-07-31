@@ -10,6 +10,7 @@ Important Headers:
 - ctype.h    - functions for tests and conversions of Types and Characters
 
 Format Specifiers:
+-  %b		- binary
 -  %c           - char
 -  %d           - signed integer
 -  %e or %E     - float - Scientific Notation
