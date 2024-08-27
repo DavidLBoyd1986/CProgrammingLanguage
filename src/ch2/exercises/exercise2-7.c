@@ -32,7 +32,7 @@ int invert(int x, int p, int n){
 	int copiedInvertedBits = 0;
 	int output = 0;
 
-	printf("\nOrifinal xCopy = %b\n", xCopy);
+	printf("\nOriginal xCopy = %b\n", xCopy);
 
 	// Verify n <= p
 	if (n > p) {
