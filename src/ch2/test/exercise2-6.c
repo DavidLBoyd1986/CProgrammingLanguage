@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <string.h>
 
+#define TRUE 0
+#define FALSE 1
+
 int setbits(int x, int p, int n, int y);
 
 
@@ -8,45 +11,75 @@ int main() {
 
 	int output;
 
-	// Binary Value = 11110001
-	int test_x = 0b100000000;
-	int test_y = 0b111000111;
+	int test_x = 0b11100011;
+	int position = 5;
+	int numOfBitChanged = 3;
+	int test_y = 0b111000001;
 
-	printf("\n x = %b\n", test_x);
-	printf("\n p = %i\n", 5);
-	printf("\n n = %i\n", 6);
-	printf("\n y = %b\n", test_y);
-	output = setbits(test_x, 5, 6, test_y);
+	output = setbits(test_x, position, numOfBitChanged, test_y);
 
-	printf("\noutput = %b\n", output);
+	printf("\nPosition = %i", position);
+	printf("\nNumber of bits to change = %i", numOfBitChanged);
+	printf("\ny = %b", test_y);
+	printf("\nOriginal = %b\n", test_x);
+	printf("Result =   %b\n", output);
 }
 
-
-// input x, change bits starting at position p.
-// change base on input y, righmost bits for n.
-// x = input & output.
-// p = position from the right in x to start changing bits
-// n = number of bits to change, and take from rightmost bits of p
+// Replace n bits in x, starting at p (from right), with n bits off right of y
+// x = binary to change
+// p = position to start change at, position from the right with right most bit being 0
+// n = number of bits to change, and num of bits to take from rightmost bits of y
 // y = int binary to take bits from changed values
-
 int setbits(int x, int p, int n, int y) {
 
-	int binaryResult = x;
+	int xCopy = x;
+	int saveRightBits = TRUE;
+	int bitMask = 0;
+	int copiedRightBits = 0;
+	int copiedBits = 0;
 
-	// Right Shift x by p, to remove current bits
-	binaryResult = binaryResult >> p;
+	printf("\nOriginal xCopy = %b\n", xCopy);
 	
-        for (int i = 0; i < n; i++) {
-		// save last bit of y, and right shift to move to next bit
-		int tempBit = y & 1;
-		y = y >> 1;
-		// left shift x, and set new last bit to match saved bit from y
-		binaryResult = binaryResult << 1;
-		binaryResult = binaryResult | tempBit;
-	}	
-	
-	printf("\nFinal binaryResult = %b\n", binaryResult);
-	
-	return binaryResult;
+	// Verify n <= p
+	if (n > p) {
+		saveRightBits = FALSE;
+	}
+
+	// If n == p, can skip saving right bits
+	if (n == p) {
+		saveRightBits = FALSE;
+	}
+
+	// Save Bits to the right of the word to be copied
+	if (saveRightBits == TRUE) {
+		// Create bitmask the length of bits to copy, and change them all to 1s
+		bitMask = ~(~bitMask << p+1-n);
+		// Copy the bits by performing an & against xCopy and the all 1 bitMask
+		copiedRightBits = xCopy & bitMask;
+		printf("\ncopiedRightBits = %b", copiedRightBits);
+		// Remove copied bits from xCopy
+		xCopy = xCopy >> p+1-n;
+	}
+
+	// Copy the Bits from the end of y
+	bitMask = ~(~bitMask << n);
+	// Copy the bits by performing an & against y and the all 1 bitMask
+	copiedBits = y & bitMask;
+	printf("\ncopiedBits = %b\n", copiedBits);
+
+	// Right Shift xCopy to remove the bits that will be changed
+	xCopy = xCopy >> n;
+
+	// Add the copiedBits back onto xCopy
+	xCopy = xCopy << n;
+	xCopy = xCopy | copiedBits;
+	printf("\nxCopy - copiedBits added back = %b\n", xCopy);
+
+	// Add the copiedRightBits back onto xCopy
+	xCopy = xCopy << p+1-n;
+	xCopy = xCopy | copiedRightBits;
+	printf("xCopy - copiedRightBits added back = %b\n", xCopy);
+
+	return xCopy;
 }
 
