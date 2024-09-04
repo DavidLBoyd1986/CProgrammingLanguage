@@ -1,7 +1,7 @@
 #include <stdio.h>
 
 /* test if 'getchar() != EOF' is 0 or 1' */
-main()
+int main()
 {
 	int c;
 	char value;

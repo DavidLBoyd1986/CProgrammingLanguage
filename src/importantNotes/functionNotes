@@ -1,4 +1,9 @@
 
+main() Function:
+
+	Return 0 if main() was successful.
+
+	Return non-zero (positive int) to indicate failure.
 
 string.h Functions:
 
