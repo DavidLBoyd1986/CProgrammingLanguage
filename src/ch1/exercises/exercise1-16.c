@@ -5,8 +5,7 @@ int getlines(char line[], int maxline);
 void copy(char to[], char from[]);
 
 /* print longest input line */
-main()
-{
+int main() {
 	int len;	/* current line length */
 	int max;	/* maximum lenth seen so far */
 	int c;		/* track the longest line past max */
@@ -15,32 +14,33 @@ main()
 	char longest[MAXLINE];	/* longest line saved here */
 
 	max = 0;
-	while ((len = getlines(line, MAXLINE)) > 0){
+	while ((len = getlines(line, MAXLINE)) > 0) {
 		c = 0;
 		if (line[-1] == '\n' && len >= max && len < MAXLINE - 1) {
 			max = len;
 			copy(longest, line);
 		} else if ( line[-1] != '\n' && len == MAXLINE -1) {
-			while ((tempc = getchar()) != EOF && tempc != '\n'){
+			while ((tempc = getchar()) != EOF && tempc != '\n') {
 				++c;
 			}
-			if (MAXLINE + c > max){
+			if (MAXLINE + c > max) {
 				max = MAXLINE + c;
 				copy(longest, line);
 			}
-		} else if (len > max){
+		} else if (len > max) {
 			max = len;
 			copy(longest, line);
 		}
 	}
+
 	if (max > 0)	/* there was a line */
 		printf("\n %d: %s \n", max, longest);
+
 	return 0;
 }
 
 /* getline: read a line into s, return length */
-int getlines(char s[], int lim)
-{
+int getlines(char s[], int lim) {
 	int c, i;
 
 	/* This is just to test the next character is valid to accept: not past limit, not EOF, and not newline. */
@@ -56,11 +56,11 @@ int getlines(char s[], int lim)
 }
 
 /* copy: copy 'from' into 'to'; assume to is big enough */
-void copy(char to[], char from[])
-{
+void copy(char to[], char from[]) {
 	int i;
 
 	i = 0;
 	while ((to[i] = from[i]) != '\0')
 		++i;	
 }
+
