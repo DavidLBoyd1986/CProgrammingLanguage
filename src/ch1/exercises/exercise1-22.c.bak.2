@@ -6,10 +6,10 @@
 #define TRUE (1 == 1)
 #define FALSE !TRUE
 
-// I'm assuming this is how they expect the program to operate.
-// The instructions are extremely unclear.
-// Per exercise - This will put the wrap '-' after the last non-blank character
-// It keeps blanks after the wrap because exercise isn't clear how to handle them.
+// TODO:
+// Correctly calculate tabs
+// Spaces aren't being added when tab goes over LINELENGTH
+// Can get them by calculating how much over LINELENGTH columns is.
 
 int getlines(char line[], int limit);
 void foldlines(char in[], char out[], int l);
@@ -31,47 +31,46 @@ int main() {
 void foldlines(char in[], char out[], int n_break) {
 	int i, j;
 	int column = 0;
-	int last_non_blank = 0;
+	int split = FALSE;
+	int last_blank = 0;
 
 	for(i = 0, j = 0; in[i] != '\0'; ++i, ++j) {
 		out[j] = in[i];
 
-		/* If new newline, reset column count */
 		if (out[j] == '\n') {
 			column = 0;
-			continue;
 		}
-
-		/* Increment column, If character is a '\t' update column by 8 'characters' */
+		
+		/* Track position along columns, and starting '\n' at n_break */		
 		if (out[j] == '\t') {
 			column = column + 8;
 		} else {
 			column++;
 		}
 
-		/* If not already, Track spot of last non-blank character */
-		if (last_non_blank == 0  && (out[i] == ' ' || out[i] == '\t')) {
-			last_non_blank = j;
-		//	printf("inside check for a blank char while not in string of blanks");
-		} else if (last_non_blank > 0 && (out[i] != ' ' && out[i] != '\t')) {
-			last_non_blank = 0;
-		//	printf("inside check for a non-blank char while in string of blanks");
+		/* Track blanks once you reach offset */
+		if (column == (n_break - OFFSET)) {
+			split = TRUE;
 		}
 
-		/* Check if reached wrap limit */
+		/* Track last blanks after offset */
+		if (split && (out[i] == ' ' || out[i] == '\t')) {
+			last_blank = j;
+		}
+
+		/* If last character was blank wrap line, else last char wasn't blank add '-' */
 		if (column >= n_break) {
-			if (last_non_blank) {
-				out[++last_non_blank] = '-';
-				/*  column isn't 0, but j - last_non_blank */
-				out[++last_non_blank] = '\n';
-				j = last_non_blank+3;
-				column = 0;
-				last_non_blank = 0;
+			if (last_blank) {
+				out[last_blank] = '\n';
+				/* I don't know why column isn't 0, but j - last_blank */
+				column = j - last_blank;
+				last_blank = 0;
 			} else {
-				out[++j] = '-';
-				out[++j] = '\n';
+				out[j++] = '-';
+				out[j] = '\n';
 				column = 0;
 			}
+			split = FALSE;
 		}
 	}
 	out[j] = '\0';
