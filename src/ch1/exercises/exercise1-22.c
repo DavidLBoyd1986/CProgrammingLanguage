@@ -1,15 +1,15 @@
 #include <stdio.h>
 
-#define LINELENGTH	 50	/* Length of line to split into more shorter lines */
-#define OFFSET		 10	/* This is used to check for Blank chars 10 chars before LineLength */
-#define MAXLINE    	1000	/* Man Length of line */
+#define LINELENGTH	 10		/* Length of line to split into more shorter lines */
+#define OFFSET		 LINELENGTH	/* This is used to check for Blank chars 10 chars before LineLength */
+#define MAXLINE    	 1000		/* Man Length of line */
 #define TRUE (1 == 1)
 #define FALSE !TRUE
 
-// I'm assuming this is how they expect the program to operate.
-// The instructions are extremely unclear.
-// Per exercise - This will put the wrap '-' after the last non-blank character
-// It keeps blanks after the wrap because exercise isn't clear how to handle them.
+// IMPORTANT - This works by not breaking words, but by making the line break at the space after,
+//	the last non-blank character, so at the last blank character.
+//	This requires remembering everything after the last blank, in case it becomes a seperator.
+
 
 int getlines(char line[], int limit);
 void foldlines(char in[], char out[], int l);
@@ -29,12 +29,18 @@ int main() {
 }
 
 void foldlines(char in[], char out[], int n_break) {
-	int i, j;
+	int i, j, b;
 	int column = 0;
+	int blanks = 0;
 	int last_non_blank = 0;
+	char buffer[MAXLINE];
 
-	for(i = 0, j = 0; in[i] != '\0'; ++i, ++j) {
+	for(i = 0, j = 0, b = 0; in[i] != '\0'; ++i, ++j, ++b) {
+		// The program just needs to print the output
+		// out needs changed to a temp char array to hold the output.
+		//out[j] = in[i];
 		out[j] = in[i];
+		buffer[b] = in[i];
 
 		/* If new newline, reset column count */
 		if (out[j] == '\n') {
@@ -50,27 +56,41 @@ void foldlines(char in[], char out[], int n_break) {
 		}
 
 		/* If not already, Track spot of last non-blank character */
-		if (last_non_blank == 0  && (out[i] == ' ' || out[i] == '\t')) {
-			last_non_blank = j;
+		if (blanks == 0  && (out[i] == ' ' || out[i] == '\t')) {
+			last_non_blank = j - 1;
 		//	printf("inside check for a blank char while not in string of blanks");
-		} else if (last_non_blank > 0 && (out[i] != ' ' && out[i] != '\t')) {
-			last_non_blank = 0;
+		} else if (blanks > 0 && (out[i] != ' ' && out[i] != '\t')) {
+			blanks = 0;
 		//	printf("inside check for a non-blank char while in string of blanks");
 		}
 
 		/* Check if reached wrap limit */
 		if (column >= n_break) {
-			if (last_non_blank) {
-				out[++last_non_blank] = '-';
-				/*  column isn't 0, but j - last_non_blank */
+			printf("\nbuffer = %s\n", buffer);
+			// String ends on chars, pushing all chars after last blank to next line
+			if (blanks == 0 && last_non_blank > 0) {
+				// End first row at last_non_blank
 				out[++last_non_blank] = '\n';
-				j = last_non_blank+3;
 				column = 0;
-				last_non_blank = 0;
-			} else {
+				last_non_blank++;
+				// Go through the buffer
+				while (last_non_blank < j) {
+					out[last_non_blank] = buffer[last_non_blank];
+					last_non_blank++;
+					column++;
+					printf("\nlast_non_blank = %i, j = %i\n", last_non_blank, j);
+				}
+			// Blanks at the break, just putting /n and restarting column
+			} else if (last_non_blank == 0 && blanks > 0) {
+				out[++j] = '\n';
+				column = 0;
+			// No blanks in string, putting '-'
+			} else if (blanks == 0 && last_non_blank == 0) {
 				out[++j] = '-';
 				out[++j] = '\n';
 				column = 0;
+			} else {
+				printf("Error - This should NOT be reached. Previous condition should have been met.");
 			}
 		}
 	}
