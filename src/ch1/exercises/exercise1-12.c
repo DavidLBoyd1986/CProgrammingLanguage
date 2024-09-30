@@ -4,8 +4,8 @@
 #define OUT 0	/* outside a word */
 
 /* print input one word per line */
-main()
-{
+int main() {
+	
 	int character, state;
 	state = OUT;
 
@@ -22,4 +22,6 @@ main()
 			state = IN;
 		}
 	}
+	
+	return 0;
 }

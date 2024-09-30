@@ -1,7 +1,7 @@
 #include <stdio.h>
 
 /* replace many blanks with one blank */
-main()
+int main()
 {
 	int character;
 	int skipBlanks;
@@ -30,4 +30,5 @@ main()
 
 		}
 	}
+	return 0;
 }

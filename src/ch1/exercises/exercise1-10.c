@@ -1,25 +1,25 @@
 #include <stdio.h>
 
 /* replace following characters with the literals: \t, \b, \\ */
-main()
-{
+int main() {
+
 	int character;
 
 	while ((character = getchar()) != EOF)
 	{
-		if (character == '\t')
-		{
+		if (character == '\t') {
 			putchar('\\');
 			putchar('t');
-		} else if (character == '\b')
-		{
+		} else if (character == '\b') {
 			putchar('\\');
 			putchar('b');
-		} else if (character == '\\')
-		{	
+		} else if (character == '\\') {
 			putchar('\\');
 			putchar('\\');
-		} else
-			putchar(character);	
+		} else {
+			putchar(character);
+		}
 	}
+
+	return 0;
 }

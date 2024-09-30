@@ -1,6 +1,16 @@
 
 Type Notes:
 
+Binary, Octal, and Hex:
+
+int testBinary = 0b01101101;
+
+int testOctal = 07757;
+
+int testHex = 0xff;
+
+
+------------------------------------
 
 Chars and String:
 

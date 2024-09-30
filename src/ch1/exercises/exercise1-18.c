@@ -6,24 +6,23 @@
 int get_lines(char line[], int limit);
 int remove_trailing_white_space(char line[], int i);
 
-main()
-{
+int main() {
 	char line[MAXLINE];
 	int len;
-	while ((len = get_lines(line, MAXLINE)) > 0){
+	while ((len = get_lines(line, MAXLINE)) > 0) {
 		printf("%s\n", line);
-		printf("%d\n", len);
+		printf("Print Line Length to verify tabs and spaces were deleted: %d\n", len);
 	}
-
+	return 0;
 }
 
-int get_lines(char s[], int lim){
+int get_lines(char s[], int lim) {
 	int end_blanks = NOTENDBLANKS;
 	int i, c, e;
 
-	for (i = 0; i < lim - 1 && (c = getchar()) != EOF && c != '\n'; ++i){
+	for (i = 0; i < lim - 1 && (c = getchar()) != EOF && c != '\n'; ++i) {
 		s[i] = c;
-		if (c == ' ' || c == '\t'){
+		if (c == ' ' || c == '\t') {
 			if (end_blanks == NOTENDBLANKS) {
 				e = i;
 			}
@@ -32,7 +31,7 @@ int get_lines(char s[], int lim){
 			end_blanks = NOTENDBLANKS;
 		}
 	}
-	if (end_blanks == ENDBLANKS){	
+	if (end_blanks == ENDBLANKS) {
 		i = remove_trailing_white_space(s, e);
 	}
 	if (c == '\n') {
@@ -43,8 +42,8 @@ int get_lines(char s[], int lim){
 	return i;
 }
 
-int remove_trailing_white_space(char s[], int e){
-	if (e == 0){
+int remove_trailing_white_space(char s[], int e) {
+	if (e == 0) {
 		s[e] = '\n';
 		return 0;
 	} else {

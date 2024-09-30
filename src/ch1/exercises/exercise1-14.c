@@ -2,7 +2,7 @@
 
 /* print histogram of the frequency of different characters */
 
-main()
+int main()
 {
 	int c, i, p;
 	int freqTracker[128];
@@ -25,4 +25,6 @@ main()
 		}
 		printf("\n");
 	}
+	
+	return 0;
 }

@@ -7,6 +7,8 @@
 int get_str(char str[], int limit);
 void check_syntax(char str[]);
 
+//TODO Redo this so it takes a program file as input.
+
 int main(void)
 {
 	char str[MAXSTR];

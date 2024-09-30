@@ -4,8 +4,7 @@
 #define OUTWORD  0	 /* Pointer is outside word */
 
 /* output the frequency of words by word lenght */
-main()
-{
+int main() {
 	int c, i, length, output;
 	length = 0;
 	int ndigit[20];
@@ -36,4 +35,6 @@ main()
 		}
 		printf("\n");	
 	}
+
+	return 0;
 }
