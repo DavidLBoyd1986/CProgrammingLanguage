@@ -5,6 +5,8 @@
 #define TRUE (1 == 1)
 #define FALSE !TRUE
 
+// TODO - Redo this so it takes a program file (like this one) as input.
+
 // This is a test comment
 
 int get_str(char str[], int limit); // This is another test comment.

@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-#define LINELENGTH	 20		/* Length of line to split into more shorter lines */
+#define LINELENGTH	 10		/* Length of line to split into more shorter lines */
 #define OFFSET		 LINELENGTH	/* This is used to check for Blank chars 10 chars before LineLength */
 #define MAXLINE    	 1000		/* Man Length of line */
 #define TRUE (1 == 1)
@@ -114,7 +114,7 @@ int getlines(char line[], int limit) {
 		line[m] = c;
 	}
 	if (c == '\n') {
-		line[m] = c;
+		line[m] == c;
 		++c;
 	}
 	line[m] = '\0';
