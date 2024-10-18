@@ -15,27 +15,31 @@ void fill_test_array_six(char s1[]);
 
 int main()
 {
-	// Declare and Initialilze test strings
-	char input_string_one[DEFAULT_ARRAY_SIZE];
+	// Declare and Initialize test strings
+	char input_string_one[DEFAULT_ARRAY_SIZE] = \
+		{'E','x','p','a','n','d',' ','t','h','i','s',' ','a' \
+		 ,'-','z','.','\0'};
 	char output_string_one[DEFAULT_ARRAY_SIZE];
-	char input_string_two[DEFAULT_ARRAY_SIZE];
+	char input_string_two[DEFAULT_ARRAY_SIZE] = \
+		{'E','x','p','a','n','d',' ','t','h','i','s',' ','A' \
+		 ,'-','Z','.','\0'};
 	char output_string_two[DEFAULT_ARRAY_SIZE];
-	char input_string_three[DEFAULT_ARRAY_SIZE];
+	char input_string_three[DEFAULT_ARRAY_SIZE] = \
+		{'E','x','p','a','n','d',' ','t','h','i','s',' ','0', \
+		 '-','9','.','\0'};
 	char output_string_three[DEFAULT_ARRAY_SIZE];
-	char input_string_four[DEFAULT_ARRAY_SIZE];
+	char input_string_four[DEFAULT_ARRAY_SIZE] = \
+		{'E','x','p','a','n','d',' ','t','h','i','s',' ','a', \
+		 '-','n','.','\0'};
 	char output_string_four[DEFAULT_ARRAY_SIZE];
-	char input_string_five[DEFAULT_ARRAY_SIZE];
+	char input_string_five[DEFAULT_ARRAY_SIZE] = \
+		{'E','x','p','a','n','d',' ','t','h','i','s',' ','M', \
+		 '-','S','.','\0'};
 	char output_string_five[DEFAULT_ARRAY_SIZE];
-	char input_string_six[DEFAULT_ARRAY_SIZE];
+	char input_string_six[DEFAULT_ARRAY_SIZE] = \
+		{'E','x','p','a','n','d',' ','t','h','i','s',' ','a', \
+		 '-','n','n','-','t','0','-','5','6','-','9','\0'};
 	char output_string_six[DEFAULT_ARRAY_SIZE];
-
-	// Fill the test input strings
-	fill_test_array_one(input_string_one);
-	fill_test_array_two(input_string_two);
-	fill_test_array_three(input_string_three);
-	fill_test_array_four(input_string_four);
-	fill_test_array_five(input_string_five);
-	fill_test_array_six(input_string_six);
 
 	// test expand function to copy to output strings
 	expand(input_string_one, output_string_one);
@@ -63,7 +67,7 @@ int main()
 
 void expand(char s1[], char s2[])
 {
-	int i, j, c, p;
+	int i, j, c;
 	i = j = 0;
 
 	while ((c = s1[i]) != '\0') {
@@ -96,135 +100,3 @@ void expand(char s1[], char s2[])
 	s2[j] = '\0';
 }
 
-
-void fill_test_array_one(char s1[])
-{
-	s1[0] = 'E';
-	s1[1] = 'x';
-	s1[2] = 'p';
-	s1[3] = 'a';
-	s1[4] = 'n';
-	s1[5] = 'd';
-	s1[6] = ' ';
-	s1[7] = 't';
-	s1[8] = 'h';
-	s1[9] = 'i';
-	s1[10] = 's';
-	s1[11] = ' ';
-	s1[12] = 'a';
-	s1[13] = '-';
-	s1[14] = 'z';
-	s1[15] = '.';
-	s1[16] = '\0';
-}
-
-void fill_test_array_two(char s1[])
-{
-	s1[0] = 'E';
-	s1[1] = 'x';
-	s1[2] = 'p';
-	s1[3] = 'a';
-	s1[4] = 'n';
-	s1[5] = 'd';
-	s1[6] = ' ';
-	s1[7] = 't';
-	s1[8] = 'h';
-	s1[9] = 'i';
-	s1[10] = 's';
-	s1[11] = ' ';
-	s1[12] = 'A';
-	s1[13] = '-';
-	s1[14] = 'Z';
-	s1[15] = '.';
-	s1[16] = '\0';
-}
-
-void fill_test_array_three(char s1[])
-{
-	s1[0] = 'E';
-	s1[1] = 'x';
-	s1[2] = 'p';
-	s1[3] = 'a';
-	s1[4] = 'n';
-	s1[5] = 'd';
-	s1[6] = ' ';
-	s1[7] = 't';
-	s1[8] = 'h';
-	s1[9] = 'i';
-	s1[10] = 's';
-	s1[11] = ' ';
-	s1[12] = '0';
-	s1[13] = '-';
-	s1[14] = '9';
-	s1[15] = '.';
-	s1[16] = '\0';
-}
-
-void fill_test_array_four(char s1[])
-{
-	s1[0] = 'E';
-	s1[1] = 'x';
-	s1[2] = 'p';
-	s1[3] = 'a';
-	s1[4] = 'n';
-	s1[5] = 'd';
-	s1[6] = ' ';
-	s1[7] = 't';
-	s1[8] = 'h';
-	s1[9] = 'i';
-	s1[10] = 's';
-	s1[11] = ' ';
-	s1[12] = 'a';
-	s1[13] = '-';
-	s1[14] = 'n';
-	s1[15] = '.';
-	s1[16] = '\0';
-}
-
-void fill_test_array_five(char s1[])
-{
-	s1[0] = 'E';
-	s1[1] = 'x';
-	s1[2] = 'p';
-	s1[3] = 'a';
-	s1[4] = 'n';
-	s1[5] = 'd';
-	s1[6] = ' ';
-	s1[7] = 't';
-	s1[8] = 'h';
-	s1[9] = 'i';
-	s1[10] = 's';
-	s1[11] = ' ';
-	s1[12] = 'M';
-	s1[13] = '-';
-	s1[14] = 'S';
-	s1[15] = '.';
-	s1[16] = '\0';
-}
-
-void fill_test_array_six(char s1[])
-{
-	s1[0] = 'E';
-	s1[1] = 'x';
-	s1[2] = 'p';
-	s1[3] = 'a';
-	s1[4] = 'n';
-	s1[5] = 'd';
-	s1[6] = ' ';
-	s1[7] = 't';
-	s1[8] = 'h';
-	s1[9] = 'i';
-	s1[10] = 's';
-	s1[11] = ' ';
-	s1[12] = '0';
-	s1[13] = '-';
-	s1[14] = '9';
-	s1[15] = '3';
-	s1[16] = '-';
-	s1[17] = '7';
-	s1[18] = 'h';
-	s1[19] = '-';
-	s1[20] = 'r';
-	s1[21] = '.';
-	s1[22] = '\0';
-}
