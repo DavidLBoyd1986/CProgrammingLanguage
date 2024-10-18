@@ -3,7 +3,7 @@
 #include <limits.h>
 #include <float.h>
 
-void main(){
+int main(){
 
 	printf("\n\n");
 	printf("Signed Char Max is: %d\n", SCHAR_MAX);
@@ -32,4 +32,15 @@ void main(){
 	printf("Unsigned long long int Max: %llu\n", ULLONG_MAX);
 	printf("Unsigned long long int Min: %d\n\n", 0); //ULLONG_MIN is not defined but in the limits.h file, but it says that it is 0
 
+	printf("Float Max: %f\n", FLT_MAX);
+	printf("Float Min: %f\n\n", FLT_MIN);
+	
+	printf("Double Max: %lf\n", DBL_MAX);
+	printf("Double Min: %lf\n\n", DBL_MIN);
+
+	printf("Long Double Max: is commented out, it is insanely long\n");	
+//	printf("Long Double Max: %Lf\n", LDBL_MAX);
+	printf("Long Double Min: %Lf\n\n", LDBL_MIN);
+
+	return 0;
 }
