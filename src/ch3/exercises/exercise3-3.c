@@ -40,6 +40,11 @@ int main()
 		{'E','x','p','a','n','d',' ','t','h','i','s',' ','a', \
 		 '-','n','n','-','t','0','-','5','6','-','9','\0'};
 	char output_string_six[DEFAULT_ARRAY_SIZE];
+	char input_string_seven[DEFAULT_ARRAY_SIZE] = \
+		{'D','o',' ','N','o','t',' ','E','x','p','a','n','d', \
+		 ' ','t','h','i','s',' ','a','-','9','-','n','-','T', \
+		 '0','-','\0'};
+	char output_string_seven[DEFAULT_ARRAY_SIZE];
 
 	// test expand function to copy to output strings
 	expand(input_string_one, output_string_one);
@@ -48,6 +53,7 @@ int main()
 	expand(input_string_four, output_string_four);
 	expand(input_string_five, output_string_five);
 	expand(input_string_six, output_string_six);
+	expand(input_string_seven, output_string_seven);
 
 	// Print the input/output strings
 	printf("\n\ninput_string_one = %s\n", input_string_one);
@@ -62,35 +68,43 @@ int main()
 	printf("output_string_five = %s\n\n", output_string_five);
 	printf("input_string_six = %s\n", input_string_six);
 	printf("output_string_six = %s\n\n", output_string_six);
+	printf("input_string_seven = %s\n", input_string_seven);
+	printf("output_string_seven = %s\n\n", output_string_seven);
 }
 
 
 void expand(char s1[], char s2[])
 {
-	int i, j, c;
+	int i, j, c, valid_expansion;
 	i = j = 0;
+	valid_expansion = FALSE;
 
 	while ((c = s1[i]) != '\0') {
 		if (c == '-') {
+			// Check if it is a - that can be expanded
 			int expand_start = s1[i-1];
 			int expand_end = s1[i+1];
 			if (expand_start >= 48 && expand_start < 57 &&
                             expand_end > 48 && expand_end <= 57) {
+				valid_expansion = TRUE;
+			} else if (expand_start >= 65 && expand_start < 90 &&
+			    expand_end > 65 && expand_end <= 90) {
+				valid_expansion = TRUE;
+			} else if (expand_start >= 97 && expand_start < 122 &&
+			    expand_end > 97 && expand_end <= 122) {
+				valid_expansion = TRUE;
+			}
+
+			if (valid_expansion) {
 				while (expand_start < expand_end) {
 					s2[j++] = ++expand_start;
 				}
-			} else if (expand_start >= 65 && expand_start < 90 &&
-			    expand_end > 65 && expand_end <= 90) {
-				while (expand_start < expand_end) {
-					s2[j++] = ++expand_start;
-				}	
-			} else if (expand_start >= 97 && expand_start < 122 &&
-			    expand_end > 97 && expand_end <= 122) {
-				while (expand_start < expand_end) {
-					s2[j++] = ++expand_start;
-				}	
+				i = i + 2; // skip i past the char after '-'
+			} else {
+				s2[j] = c;
+				i++;
+				j++;
 			}
-			i = i + 2; // skip i past the char after '-'
 		} else {
 			s2[j] = c;
 			i++;
