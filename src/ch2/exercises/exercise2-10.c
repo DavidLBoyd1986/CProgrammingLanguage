@@ -2,8 +2,8 @@
 
 int lower(int c);
 
-int main() {
-
+int main()
+{
 	char testString[100] = "A StRiNG WItH somE CapITaL LeTTErS";
 	printf("\ntestString = %s\n", testString);
 
@@ -15,13 +15,15 @@ int main() {
 	printf("\nresultString = %s\n\n", resultString);
 }
 
-int lower(int c) {
+int lower(int c)
+{
 	// Could have both on one line with return, but I think this is easier to read.
 	int lower_c = (c >= 'A' && c <= 'Z') ? c + 'a' - 'A' : c;
 	return lower_c;
 }
 
-int lower_original(int c) {
+int lower_original(int c)
+{
 	if (c >= 'A' && c <= 'Z')
 		return c + 'a' - 'A';
 	else

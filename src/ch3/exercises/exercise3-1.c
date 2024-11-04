@@ -3,8 +3,8 @@
 int binsearch(int x, int v[], int n);
 int binsearch_updated(int x, int v[], int n);
 
-int main() {
-
+int main()
+{
 	// Create Test Values to search for
 	int test_value_one = 63;
 	int test_value_two = 64;
@@ -18,7 +18,6 @@ int main() {
 	for (int i = 0; i < length; i++) {
 		array_one[i] = i + 1;
 	}
-
 	// Initialize test array two
 	int j = 0;
 	for (int i = 0; i < length; i++) {
@@ -46,11 +45,11 @@ int main() {
 	printf("\nPosition of value = %i\n", result_test_three_up);
 }
 
-int binsearch_updated(int x, int v[], int n) {
+int binsearch_updated(int x, int v[], int n)
+{
 	int low, high, mid;
 	low = 0;
 	high = n - 1;
-
 	
 	while (low <= high) {
 		mid = (low + high) / 2;
@@ -60,7 +59,6 @@ int binsearch_updated(int x, int v[], int n) {
 			low = mid + 1;
 		}
 	}
-
 	if (x == v[mid]) {
 		return mid;
 	} else {
@@ -68,7 +66,8 @@ int binsearch_updated(int x, int v[], int n) {
 	}
 }
 
-int binsearch(int x, int v[], int n) {
+int binsearch(int x, int v[], int n)
+{
 	int low, high, mid;
 	low = 0;
 	high = n - 1;

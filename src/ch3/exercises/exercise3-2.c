@@ -6,8 +6,8 @@ void escape(char s[], char t[]);
 void escape_reverse(char s[], char t[]);
 int get_lines(char line[], int limit);
 
-int main() {
-	
+int main()
+{	
 	int lineLength;
 	int stringMaxLength;
 	char inputString[MAXSTRING];
@@ -23,9 +23,8 @@ int main() {
 
 }
 
-
-void escape(char s[], char t[]) {
-
+void escape(char s[], char t[])
+{
 	int i, c, e;
 	i = c = e = 0;
 	while ((c = s[i]) != '\0') {
@@ -47,9 +46,8 @@ void escape(char s[], char t[]) {
 	t[e] = '\0';
 }
 
-
-void escape_reverse(char s[], char t[]) {
-
+void escape_reverse(char s[], char t[])
+{
 	int i, c, e;
 	i = c = e = 0;
 	while ((c = s[i]) != '\0') {
@@ -74,9 +72,8 @@ void escape_reverse(char s[], char t[]) {
 	t[e] = '\0';
 }
 
-
-int get_lines(char line[], int limit) {
-	
+int get_lines(char line[], int limit)
+{	
 	int m, c;
 
 	for (m = 0; m < limit && (c = getchar()) != EOF; ++m) {
