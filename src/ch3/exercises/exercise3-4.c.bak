@@ -23,25 +23,11 @@ int main()
 	char test_array_three[100];
 	char test_array_int_min[100];
 
-	printf("\nitoa test output:\n");
+	printf("\nitoa tests:\n");
 	printf("-----------------\n");
-	printf("Binary of int max = %b\n", test_int_max);
-	printf("Binary of int max + 1 = %b\n", test_int_max_plus_one);
-	printf("Int of int max + 1 = %i\n\n", test_int_max_plus_one);
-
-	printf("Binary of int min = %b\n", test_int_min);
-	printf("Int of int min = %i\n\n", test_int_min);
-	test_int_min_two = -test_int_min_two;
-	printf("Binary of inverted int min = %b\n", test_int_min_two);
-	printf("Int of inverted int min = %i\n\n", test_int_min_two);
-	int test_int_max_copy = test_int_max;
-	test_int_max_copy = test_int_max_copy / 10;
-	printf("Binary of divided int max = %b\n", test_int_max_copy);
-	printf("Int of divided int max = %i\n\n", test_int_max_copy);
-
-	int divided_int_max_min = test_int_min_two / 10;
-	printf("Binary of divided inverted int max min = %b\n", divided_int_max_min);
-	printf("Int of divided inverted int max min = %i\n", divided_int_max_min);
+	printf("test_array input = %i\n", test_int);
+	printf("test_array_int_max input = %i\n", test_int_max);
+	printf("test_array_int_min input = %i\n", test_int_min);
 
 	itoa(test_int, test_array);
 	printf("\ntest_array = %s\n", test_array);
