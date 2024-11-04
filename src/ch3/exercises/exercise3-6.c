@@ -2,14 +2,8 @@
 #include <string.h>
 #include <limits.h>
 
-void itoa(int n, char s[]);
+void itoa(int n, char s[], int l);
 void reverse(char s[]);
-
-/* itoa can't handle the largest negative number because two's complement inverses the binary of the number, and adds one. Once the negative sign is removed in itoa, it ends up as INT_MAX + 1.
-* 
-* The fix is to check if the int value == INT_MIN and handle that special case.
-*
-*/
 
 int main()
 {
@@ -29,26 +23,27 @@ int main()
 	printf("test_array_int_max input = %i\n", test_int_max);
 	printf("test_array_int_min input = %i\n", test_int_min);
 
-	itoa(test_int, test_array);
+	itoa(test_int, test_array, 9);
 	printf("\ntest_array = %s\n", test_array);
 	
-	itoa(test_int_max, test_array_int_max);
+	itoa(test_int_max, test_array_int_max, 18);
 	printf("\ntest_array_int_max = %s\n", test_array_int_max);
 	
-	itoa(test_int_min, test_array_int_min);
+	itoa(test_int_min, test_array_int_min, 21);
 	printf("\ntest_array_int_min = %s\n\n", test_array_int_min);
 
 	return 0;
 }
 
 /* itoa: convert n to characters in s */
-void itoa(int n, char s[])
+void itoa(int n, char s[], int l)
 {
 	int i, sign;
 	i = 0;
-	// test if it's an int_min edge case
-	if (n == INT_MIN) {
-		s[i++] = '8';
+
+	if (n == INT_MIN) { /* handle INT_MIN edge case */
+		n++;
+		s[i++] = ((-n % 10) + 1) + '0';
 		n /= 10;
 	}
 	if ((sign = n) < 0)	/* record sign */
@@ -58,6 +53,9 @@ void itoa(int n, char s[])
 	} while ((n /= 10) > 0);	/* delete it */
 	if (sign < 0)
 		s[i++] = '-';
+	while (i < l) {		/* add padding, if necessary */
+		s[i++] = ' ';
+	}
 	s[i] = '\0';
 	reverse(s);
 }
