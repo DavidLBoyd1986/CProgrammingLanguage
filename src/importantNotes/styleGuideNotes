@@ -1,0 +1,26 @@
+
+WILL USE LINUX  KERNEL STYLE GUIDE.
+
+Use underscores for variable names. NOT camelCase.
+
+Declare variables of the same type on the same line.
+
+Leave one blank line between variable declarations and the first line of code.
+
+Define CONSTANTS for special numbers.
+
+Use capitals and underscores for constants DEFAULT_ARRAY_SIZE
+
+Leave one blank space between operators, and one blank space after commas.
+
+Use braces for conditionals and loops.
+
+If p is a pointer to a structure, you should access members by using p->member.
+	Rather than (*p).member.
+
+If p is a pointer to a structure, do not surround the -> operator with spaces.
+	Uuse p->id instead of p -> id.
+
+Don't exceed 80 characters on a line. Use linecheck command to check.
+
+Avoid Code Duplication.

@@ -6,8 +6,8 @@
 
 void squeeze(char s1[100], char s2[100]);
 
-int main() {
-
+int main()
+{
 	// Test One
 	char string_1[100] = "hello, world!";
 	char string_2[100] = "hl !";
@@ -25,11 +25,12 @@ int main() {
 	printf("\nCharacters to remove: %s\n", string_4);	
 	squeeze(string_3, string_4);
 	printf("\nString after the squeeze: %s\n\n", string_3);
+
+	return 0;
 }
 
-
-void squeeze(char s1[100], char s2[100]){
-
+void squeeze(char s1[100], char s2[100])
+{
 	int t = 0;
 	int i;
 	int j;
@@ -42,18 +43,15 @@ void squeeze(char s1[100], char s2[100]){
 		for (j = 0; s2[j] != '\0'; j++) {
 
 			int s2_char = s2[j];
-
 			if (s1_char == s2_char) {
 				remove_char = TRUE;
 			}
 		}
-		if (remove_char == TRUE) {
-		} else {
+		if (remove_char != TRUE) {
 			s1[t] = s1[i];
 			t++;
 		}
 	}
-	
-	s1[t] = '\0';	
-
+	s1[t] = '\0';
 }
+

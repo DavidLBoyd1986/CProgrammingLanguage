@@ -5,8 +5,8 @@
 
 int htoi(char hex_string[]);
 
-int main() {
-
+int main()
+{
 	char hex_string_test_one[50] = "3d4f";
 	char hex_string_test_two[50] = "0xe3d4f";
 	char hex_string_test_three[50] = "0Xbc3d4f";
@@ -21,19 +21,19 @@ int main() {
 	printf("Hex Value: %lli\n", hex_value_test_two);
 	printf("\nHex Value: %s\n", hex_string_test_three);
 	printf("Hex Value: %lli\n", hex_value_test_three);
+	return 0;
 }
 
-int htoi(char hex_string[]){
-
+int htoi(char hex_string[])
+{
 	int str_length = strlen(hex_string);
-	
 	int i;
 	long long temp_str_value;
 	long long str_value = 0;
 
 	int hex_multiplier = 1;
 
-	for (i = str_length - 1; i >= 0; i--){
+	for (i = str_length - 1; i >= 0; i--) {
 	
 		//Check for optional leading 'ox' or'Ox'
 		if (hex_string[i] == 'x') {

@@ -1,4 +1,9 @@
 
+Example Functions:
+	itoa - functionExamples/iota.c
+	reverse - /functionExamples/iota.c
+		reverses string in place
+
 main() Function:
 
 	Return 0 if main() was successful.
@@ -8,6 +13,25 @@ main() Function:
 string.h Functions:
 
 	int strlen(char s[])
+
+stdio.h Functions:
+
+	fgets(<var_to_save_to>, <size>, stdin)
+	fgets(<var_to_save_to>, <size>, <FILE>)
+
+	fopen(<path_to_file>, "r")
+	
+	fclose(file);
+
+	printf("testinput = %s", testinput);
+
+	getchar()
+	char character = getchar();
+
+	putchar()
+	putchar(character);
+
+	scanf("%i", &test_input); // & is a pointer to memory address of test_input variable
 
 
 

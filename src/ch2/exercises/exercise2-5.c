@@ -6,8 +6,8 @@
 
 int any(char s1[100], char s2[100]);
 
-int main() {
-
+int main()
+{
 	// Test One
 	char string_1[100] = "hello, world!";
 	char string_2[100] = "sd";
@@ -20,10 +20,16 @@ int main() {
 	int second_loc = any(string_3, string_4);
 	printf("\nTest Two - First Location = %i\n", second_loc);
 
+	// Test Three
+	char string_5[100] = "hello, world!";
+	char string_6[100] = "r";
+	int third_loc = any(string_5, string_6);
+	printf("\nTest Three - First Location = %i\n", third_loc);
+	return 0;
 }
 
-int any(char s1[100], char s2[100]) {
-
+int any(char s1[100], char s2[100])
+{
 	int i;
 	int j;
 
@@ -31,18 +37,15 @@ int any(char s1[100], char s2[100]) {
 
 		int char_found = FALSE;
 		int s1_char = s1[i];
-		
+
 		for (j = 0; s2[j] != '\0'; j++) {
-			
+
 			int s2_char = s2[j];
 
 			if (s1_char == s2_char) {
-				char_found = TRUE;
+				return i;
 			}
 		}
-
-		if (char_found == TRUE) {
-			return i;
-		}
 	}
+	return -1;
 }

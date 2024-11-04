@@ -2,8 +2,8 @@
 
 int rightrot(int x, int n);
 
-int main() {
-
+int main()
+{
 	int x = 0b1101101111101;
 	int n = 5;
 	int output;
@@ -12,12 +12,11 @@ int main() {
 
 	printf("\nx = %b\n", x);
 	printf("n = %i\n", n);
-	printf("output = %b\n", output);
-
+	printf("output = %b\n\n", output);
 }
 
-int rightrot(int x, int n) {
-
+int rightrot(int x, int n)
+{
 	int xCopy = x;
 	int rotatedBits = 0;
 	int bitMask = ~(~0 << n);
@@ -34,7 +33,7 @@ int rightrot(int x, int n) {
 		xCopyTemp = xCopyTemp / 2;
 		binaryLen++;
 	}
-	
+
 	// Left Shift rotatedBits and add xCopy to the right
 	rotatedBits = rotatedBits << binaryLen;
 	rotatedBits = rotatedBits | xCopy;
