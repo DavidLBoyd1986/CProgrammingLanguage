@@ -9,5 +9,10 @@ int main() {
 		}
 	}
 
+	double test1 = 20;
+	double test2 = 3;
+	double answer1 = (int) test1 % (int) test2;
+	printf("\ndouble answer = %g\n", answer1);
+
 	return 0;
 };
