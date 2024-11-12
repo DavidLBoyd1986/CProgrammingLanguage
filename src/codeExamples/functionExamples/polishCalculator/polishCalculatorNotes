@@ -1,0 +1,6 @@
+
+Negative Numbers:
+
+Negative numbers are the same symbol as subtraction. So I have to deal with that in the getop function.
+
+Got it working using getch and ungetch to check the next char if a '-' pops up..
