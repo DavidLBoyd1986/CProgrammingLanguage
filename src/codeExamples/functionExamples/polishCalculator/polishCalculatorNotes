@@ -1,6 +1,27 @@
 
+Exercise 4-3:
 Negative Numbers:
 
 Negative numbers are the same symbol as subtraction. So I have to deal with that in the getop function.
 
-Got it working using getch and ungetch to check the next char if a '-' pops up..
+Got it working using getch and ungetch to check the next char if a '-' pops up.
+----------------------
+
+Exercise 4-4:
+
+Got half the added commands to work by using the val[] instead of the buffer and getch like an idiot.
+
+still need to get these to work:
+
+! - clearStack()
+	It doesn't clear the stack.
+	It does clear the stack.
+You just have to clear it, and then do some more than and it only calculates what was added after the clear.
+
+& - duplicatech()
+	It doesn't seem to continue the problem after it duplicates the value.
+	I'm not sure what should happen when the value is duplicated, is it put on the stack again?
+	I think it must be duplicated and put on the stack.
+	These exercises can be way too vague.
+	I got it to work with just adding the top value again on top the stack.
+	That has to be what they mean for you to do.
