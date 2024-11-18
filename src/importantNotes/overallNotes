@@ -7,6 +7,7 @@ Important Headers:
 - stdlib.h   - provides ?????
 - limits.h   - defines the max size of different types
 - float.h    - functions for float
+- string.h   - functions for strings (strcmp)
 - ctype.h    - functions for tests and conversions of Types and Characters
 
 Format Specifiers:
@@ -43,3 +44,10 @@ Special characters:
 - \v		- Vertical Tab
 - \\		- Backslash
 - \?		- Question Mark
+
+Functions in Headers:
+
+string.h:
+
+strcmp(str1, str2):
+	returns 0 if strings match, it returned int > 0 if no match.
