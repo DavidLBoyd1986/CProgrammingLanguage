@@ -1,3 +1,9 @@
 
 
 1. Add error handling to ch2 exercise 6.
+
+2. verify function names are allowed in exercise 4-5
+	Have to verify all alphabet chars greater than 1 are a valid function.
+	Seems almost impossible to do in depth.
+	Could at least check that the name of the function is valid,
+	but it's hard to check just the name if it is missing the '('.

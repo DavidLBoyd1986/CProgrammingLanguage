@@ -18,12 +18,18 @@ void swapchs(void);
 void clearstack(void);
 void printArray(double []);
 
+// TODO- Verify function name is valid - Exercise 4-5
+//	I will have to push inside the perform function
+//	as it will always push something if I push in main
+//	unless I add if logic in main, which is bad design
+
+//	Or, I can verify in getop, which is probably the better design
+
 /* reverse polish calculator */
 int main()
 {
 	int type;
 	double op2;
-	double function_val;
 	char s[MAXOP];
 
 	while ((type = getop(s)) != EOF) {
@@ -32,8 +38,7 @@ int main()
 			push(atof(s));
 			break;
 		case IDENTIFIER:
-			function_val = perform_function(s);
-			push(function_val);
+			push(perform_function(s));
 			break;
 		case '+':
 			push(pop() + pop());
@@ -113,43 +118,43 @@ double pop(void)
 double perform_function(char s[])
 {
 	int c = 0;
-	int val_one = 0;
-	int val_two = 0;
-	double result;
 	char function[MAXOP] = {};
+	int i = 0;
+	char temp = 0;
+	char temp_string[MAXOP] = {};
+	double val_one = 0;
+	double val_two = 0;
 	
-	while (s[c] != '(') {
+	while (s[c] != '(') {	/* Get function name */
 		function[c] = s[c];
 		c++;
 	}
 	s[c] = '\0';
+	/* Get values in function, and perform function */
 	if (strcmp(function, "exp") == 0) {
-		val_one = s[++c];
-		printf("\nexp val_one = %i\n", val_one);
-		result = exp(val_one);
-		return result;
-		//push(exp(val_one));
-	} else if (strcmp(function, "sin") == 0) {
-		val_one = s[++c];
-		printf("\nsin val_one = %i\n", val_one);
-		result = sin(val_one);
-		return result;
-		//return push(sin(val_one));
-	} else if (strcmp(function, "pow") == 0) {
-		val_one = s[++c];
-		printf("\nsin val_one = %i\n", val_one);
-		/* Get past c and whitespace */
-		while ((val_two = s[++c]) == ',' || val_two == ' ')
-			;
-		/* Verify it is a valid digit */
-		if (isdigit((val_two = s[++c]))) {
-			result = pow(val_one, val_two);
-			return result;
-			//return push(pow(val_one, val_two));
-		} else {
-			printf("\nERROR: perform_function no valid function\n");
+		for (i = 0; (temp = s[++c]) != ')'; i++) {
+			temp_string[i] = temp;
 		}
-		printf("\nsin val_two = %i\n", val_two);
+		temp_string[i] = '\0';
+		return exp(atof(temp_string));
+	} else if (strcmp(function, "sin") == 0) {
+		for (i = 0; (temp =  s[++c]) != ')'; i++) {
+			temp_string[i] = temp;
+		}
+		temp_string[i] = '\0';
+		return sin(atof(temp_string));
+	} else if (strcmp(function, "pow") == 0) {
+		for (i = 0; (temp = s[++c]) != ','; i++) {
+			temp_string[i] = temp;
+		}
+		temp_string[i] = '\0';
+		val_one = atof(temp_string);
+		for (i = 0; (temp = s[++c]) != ')'; i++) {
+			temp_string[i] = temp;
+		}
+		temp_string[i] = '\0';
+		val_two = atof(temp_string);
+		return pow(val_one, val_two);
 	}
 }
 
@@ -163,17 +168,19 @@ void ungetch(int);
 int getop(char s[])
 {
 	int i, c, neg, temp;
+	i = 0; // Not initializing this was a bad bug
 
 	while ((s[0] = c = getch()) == ' ' || c == '\t')
 		;
 	s[1] = '\0'; 	// Required to make the single char a string
-	if (isalpha(c)) { 	/* check if alpha, followed by another alpha */
+	if (isalpha(c)) { 	/* if continuous alphas, then get function */
 		if (isalpha(temp = getch())) {
 			s[++i] = temp;
-			while ((s[++i] = c = getch()) != ')')
+			while ((s[++i] = c = getch()) != ')') {
 				;
+			}
 			s[++i] = '\0';
-			return IDENTIFIER;
+			return IDENTIFIER; 
 		} else {
 			ungetch(temp);
 		}

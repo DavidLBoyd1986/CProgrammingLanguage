@@ -8,6 +8,20 @@
 #define NUMBER 	'0' 	/* signal that a number was found */
 #define IDENTIFIER '1' 	/* signal that perform_function() needs ran */
 
+// Problem - pow() works once, but throws a seg fault when ran again.
+// I put prints, but it doesn't even seem to run perform_function again
+
+// It only happens after a pow() has been popped.
+// I can run pow() multiple times and push it.
+// But once it has been popped once, I can't run perform_function again
+// When I run perform_function after popping a pushed pow(),
+// it throws the seg fault, and won't run the first line of perform_function
+
+// The problem is in getop(), 100%, there is some array issue
+// it won't happen if pow() is later in the command
+// it only happens after running pow() once, 
+// and it is the first command in next run
+
 int getop(char []);
 void push(double);
 double pop(void);
@@ -23,7 +37,6 @@ int main()
 {
 	int type;
 	double op2;
-	double function_val;
 	char s[MAXOP];
 
 	while ((type = getop(s)) != EOF) {
@@ -32,8 +45,7 @@ int main()
 			push(atof(s));
 			break;
 		case IDENTIFIER:
-			function_val = perform_function(s);
-			push(function_val);
+			push(perform_function(s));
 			break;
 		case '+':
 			push(pop() + pop());
@@ -113,43 +125,42 @@ double pop(void)
 double perform_function(char s[])
 {
 	int c = 0;
-	int val_one = 0;
-	int val_two = 0;
-	double result;
+	int i = 0;
+	char temp = 0;
+	char temp_string[MAXOP] = {};
+	double val_one = 0;
+	double val_two = 0;
 	char function[MAXOP] = {};
 	
-	while (s[c] != '(') {
+	while (s[c] != '(') {	/* Get function name */
 		function[c] = s[c];
 		c++;
 	}
 	s[c] = '\0';
 	if (strcmp(function, "exp") == 0) {
-		val_one = s[++c];
-		printf("\nexp val_one = %i\n", val_one);
-		result = exp(val_one);
-		return result;
-		//push(exp(val_one));
-	} else if (strcmp(function, "sin") == 0) {
-		val_one = s[++c];
-		printf("\nsin val_one = %i\n", val_one);
-		result = sin(val_one);
-		return result;
-		//return push(sin(val_one));
-	} else if (strcmp(function, "pow") == 0) {
-		val_one = s[++c];
-		printf("\nsin val_one = %i\n", val_one);
-		/* Get past c and whitespace */
-		while ((val_two = s[++c]) == ',' || val_two == ' ')
-			;
-		/* Verify it is a valid digit */
-		if (isdigit((val_two = s[++c]))) {
-			result = pow(val_one, val_two);
-			return result;
-			//return push(pow(val_one, val_two));
-		} else {
-			printf("\nERROR: perform_function no valid function\n");
+		for (i = 0; (temp = s[++c]) != ')'; i++) {
+			temp_string[i] = temp;
 		}
-		printf("\nsin val_two = %i\n", val_two);
+		temp_string[i] = '\0';
+		return exp(atof(temp_string));
+	} else if (strcmp(function, "sin") == 0) {
+		for (i = 0; (temp =  s[++c]) != ')'; i++) {
+			temp_string[i] = temp;
+		}
+		temp_string[i] = '\0';
+		return sin(atof(temp_string));
+	} else if (strcmp(function, "pow") == 0) {
+		for (i = 0; (temp = s[++c]) != ','; i++) {
+			temp_string[i] = temp;
+		}
+		temp_string[i] = '\0';
+		val_one = atof(temp_string);
+		for (i = 0; (temp = s[++c]) != ')'; i++) {
+			temp_string[i] = temp;
+		}
+		temp_string[i] = '\0';
+		val_two = atof(temp_string);
+		return pow(val_one, val_two);
 	}
 }
 
@@ -163,15 +174,26 @@ void ungetch(int);
 int getop(char s[])
 {
 	int i, c, neg, temp;
+	i = 0; //Added as possible fix
 
 	while ((s[0] = c = getch()) == ' ' || c == '\t')
 		;
 	s[1] = '\0'; 	// Required to make the single char a string
+	printf("\ngetop, past while loop to remove whitespace\n");
 	if (isalpha(c)) { 	/* check if alpha, followed by another alpha */
+		printf("\ngetop, inside first if isalpha()\n");
 		if (isalpha(temp = getch())) {
+			printf("\ngetop, inside second if isalpha()\n");
+			printf("\ngetop, 2nd alpha, temp = %c\n", temp);
+			printf("\ngetop, 2nd alpha, s = %s\n", s); // In output
+			printf("\ni = %i\n", i);
 			s[++i] = temp;
-			while ((s[++i] = c = getch()) != ')')
+			printf("\ngetop, 2nd alpha after temp, s = %s\n", s); // Not in output
+			while ((s[++i] = c = getch()) != ')') {
+				printf("\ngetop, inside while of second isalpha()\n");
+				printf("\ni = %i\n", i);
 				;
+			}
 			s[++i] = '\0';
 			return IDENTIFIER;
 		} else {
