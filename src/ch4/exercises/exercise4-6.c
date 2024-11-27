@@ -29,9 +29,8 @@ double get_var(char[]);
 
 //	Or, I can verify in getop, which is probably the better design
 
-// TODO - Exercise 4-6 - variables aren't working inside functions
-//	Most likely the function method isn't designed to handle variables
-//	Will review/update it.
+// TODO - Exercise 4-6 - refactor perform_function
+//	perform function became sloppy after adding support for variables.
 
 /* reverse polish calculator */
 int main()
