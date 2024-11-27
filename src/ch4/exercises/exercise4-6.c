@@ -106,7 +106,7 @@ int main()
 int sp = 0;		/* next free stack position */
 double val[MAXVAL];	/* value stack */
 char var_name[MAXVAL];	/* variable name stack */
-char var_value[MAXVAL];	/* variable value stack */
+double var_value[MAXVAL];	/* variable value stack */
 int var_pos = 0;	/* next free variable position */
 
 /* push: push f onto value stack */
@@ -141,7 +141,7 @@ double perform_function(char s[])
 	char temp_string[MAXOP] = {};
 	double val_one = 0;
 	double val_two = 0;
-	
+
 	while (s[c] != '(') {	/* Get function name */
 		function[c] = s[c];
 		c++;
@@ -150,27 +150,56 @@ double perform_function(char s[])
 	/* Get values in function, and perform function */
 	if (strcmp(function, "exp") == 0) {
 		for (i = 0; (temp = s[++c]) != ')'; i++) {
+			if (isalpha(temp) && i == 0) {
+				temp_string[i++] = temp;
+				temp_string[i] = '\0';
+				return exp(get_var(temp_string));
+			}
 			temp_string[i] = temp;
 		}
 		temp_string[i] = '\0';
 		return exp(atof(temp_string));
 	} else if (strcmp(function, "sin") == 0) {
 		for (i = 0; (temp =  s[++c]) != ')'; i++) {
+			if (isalpha(temp) && i == 0) {
+				temp_string[i++] = temp;
+				temp_string[i] = '\0';
+				return sin(get_var(temp_string));
+			}
 			temp_string[i] = temp;
 		}
 		temp_string[i] = '\0';
 		return sin(atof(temp_string));
 	} else if (strcmp(function, "pow") == 0) {
 		for (i = 0; (temp = s[++c]) != ','; i++) {
+			if (isalpha(temp)) {
+				temp_string[i++] = temp;
+				temp_string[i] = '\0';
+				val_one = get_var(temp_string);
+				temp_string[0] = '\0';
+				c++;
+				break;
+			}
 			temp_string[i] = temp;
 		}
-		temp_string[i] = '\0';
-		val_one = atof(temp_string);
+		if (strlen(temp_string) > 0) {	/* empty string was variable */
+			temp_string[i] = '\0';
+			val_one = atof(temp_string);
+		}
 		for (i = 0; (temp = s[++c]) != ')'; i++) {
+			if (isalpha(temp)) {
+				temp_string[i++] = temp;
+				temp_string[i] = '\0';
+				val_two = get_var(temp_string);
+				temp_string[0] = '\0';
+				break;
+			}
 			temp_string[i] = temp;
 		}
-		temp_string[i] = '\0';
-		val_two = atof(temp_string);
+		if (strlen(temp_string) > 0) {
+			temp_string[i] = '\0';
+			val_two = atof(temp_string);
+		}
 		return pow(val_one, val_two);
 	}
 }
@@ -289,7 +318,6 @@ void put_var(char s[])
 	int n = 0;
 	int t = 0;
 	char temp_name;
-	int temp_val;
 	char temp_val_string[MAXVAL];
 
 	if (isalpha(s[n])) {
@@ -315,10 +343,11 @@ double get_var(char s[])
 	char find_var = s[0];
 
 	while (n < var_pos) {
-		if (var_name[n] == find_var)
+		if (var_name[n] == find_var) {
 			return var_value[n];
-		else
+		} else {
 			n++;
+		}
 	}
 	printf("\nERROR - Variable not found.");
 }
