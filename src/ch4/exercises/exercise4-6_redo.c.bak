@@ -14,30 +14,34 @@
 int getop(char []);
 void push(double);
 double pop(void);
-double perform_function(char []);
+double perform_function(char [], double, double);
 void showch(void);
 void duplicatech(void);
 void swapchs(void);
 void clearstack(void);
 void printArray(double []);
-void put_var(char []);
+void put_var(char [], double);
 double get_var(char[]);
 
 char var_name[MAXVAL];	/* variable name stack */
 double var_value[MAXVAL];	/* variable value stack */
 int var_pos = 0;	/* next free variable position */
+
 // TODO - Create an updated program that correctly
 //	handles functions and variables. It should
 //	work like the polish method.
 //	2 5 pow  :  5 exp  : 20 sin  
 //	x 5 =	: for assignment of variables
 
-// TODO - Exercise 4-5 - Verify function name is valid
-//	I will have to push inside the perform function
-//	as it will always push something if I push in main
-//	unless I add if logic in main, which is bad design
+// IMPORTANT - The reason it waits on getop
+// is it's  because I'm removimg the \n from end of array.
+// SOLUTION - I had to add an ungetch in getop()
+// It was removing the \n after getting the function name
 
-//	Or, I can verify in getop, which is probably the better design
+// IMPORTANT - getchar function provided by C stdio.h
+// stores the input in a buffer until a /n or EOF is reached.
+// This is why the print statements don't appear until you
+// input \n.
 
 /* reverse polish calculator */
 int main()
@@ -48,17 +52,25 @@ int main()
 	char s[MAXOP];
 
 	while ((type = getop(s)) != EOF) {
+		printf("\ntop of main loop, type = %i\n", type);
 		switch (type) {
 		case NUMBER_ID:
 			push(atof(s));
 			break;
 		case FUNCTION_ID:
-			push(perform_function(s));
+			op2 = pop();
+			if (strcmp(s, "pow") == 0) {
+				push(perform_function(s, pop(), op2));
+			} else {
+				push(perform_function(s, op2, 0));
+			}
 			break;
 		case PUT_VAR_ID:
-			put_var(s);
+			printf("\nInside PUT_VAR_ID\n");
+			put_var(s, pop());
 			break;
 		case GET_VAR_ID:
+			printf("\nInside GET_VAR_ID\n");
 			push(get_var(s));
 			break;
 		case '+':
@@ -141,57 +153,18 @@ double pop(void)
 #include <math.h>
 
 /* perform the math function provided */
-double perform_function(char s[])
+double perform_function(char s[], double op1, double op2)
 {
-	int c = 0;
-	char function[MAXOP] = {};
-	int i = 0;
-	char temp = 0;
-	char temp_string[MAXOP] = {};
-	double val_one = 0;
-	double val_two = 0;
-
-	while (s[c] != '(') {	/* Get function name */
-		function[c] = s[c];
-		c++;
-	}
-	s[c] = '\0';
-	/* Get values in function, and perform function */
-	while ((temp = s[++c]) != ')') {
-		if (temp == ',') {
-			val_one = atof(temp_string);
-			i = 0;
-			continue;
-		}
-		if (isalpha(temp)) { //Handle variables
-			temp_string[i++] = temp;
-			temp_string[i] = '\0';
-			if (strcmp(function, "exp") == 0) {
-				return exp(get_var(temp_string));
-			} else if (strcmp(function, "sin") == 0) {
-				return sin(get_var(temp_string));
-			} else if (strcmp(function, "pow") == 0) {
-				if (s[++c] == ',') {
-					val_one = get_var(temp_string);
-					i = 0;
-					continue;
-				} else {
-					val_two = get_var(temp_string);
-					return pow(val_one, val_two);
-				}
-			}
-		}
-		temp_string[i] = temp;
-		i++;
-	}
-	if (strcmp(function, "exp") == 0) {
-		return exp(atof(temp_string));
-	} else if (strcmp(function, "sin") == 0) {
-		return sin(atof(temp_string));
-	} else if (strcmp(function, "pow") == 0) {
-		temp_string[i] = '\0';
-		val_two = atof(temp_string);
-		return pow(val_one, val_two);
+	printf("\nInside perform_function()\n");
+	printf("s = %s\n", s);
+	printf("op1 = %lf\n", op1);
+	printf("op2 = %lf\n", op2);
+	if (strcmp(s, "exp") == 0) {
+		return exp(op1);
+	} else if (strcmp(s, "sin") == 0) {
+		return sin(op1);
+	} else if (strcmp(s, "pow") == 0) {
+		return pow(op1, op2);
 	}
 }
 
@@ -207,27 +180,28 @@ int getop(char s[])
 	int i, c, neg, temp;
 	i = 0; // Not initializing this was a bad bug
 
-	while ((s[0] = c = getch()) == ' ' || c == '\t') // Remove whitespace
+	printf("\nInside getop\n");
+	while ((s[0] = c = getch()) == ' ' || c == '\t') { // Remove whitespace
 		;
+	}
+	printf("\nInside getop, after clearing white space\n");
 	s[1] = '\0'; 	// Required to make the single char a string
 	if (isalpha(c)) {
+		//printf("\ngetp, after first isalpha, c = %i\n", c);
 		if (isalpha(temp = getch())) { // for perform_function()
 			s[++i] = temp;
-			while ((s[++i] = c = getch()) != ')') {
-				;
+			//printf("\ninside 2nd isalpha, s = %s\n", s);
+			while (isalpha(c = getch())) {
+				s[++i] = c;
 			}
+			ungetch(c);
 			s[++i] = '\0';
+			//printf("\nfinal string in getop, s = %s\n", s);
 			return FUNCTION_ID;
-		} else if (temp == '=') { 	/* for put_var() */
-			// Does not save '=' to make parsing easier
-			while (isdigit(temp = getch()) || temp == '.') {
-				s[++i] = temp;
-			}
-			s[++i] = '\0';
-			return PUT_VAR_ID;
 		} else if (temp == ' ' ) { 	/* for get_var() */
+			//printf("\ntemp == ' ', temp = %i\n", temp);
 			ungetch(temp);
-			s[++i] = '\0';
+			//s[++i] = '\0';
 			return GET_VAR_ID;
 		} else {			/* ERROR Handling */
 			ungetch(temp);
@@ -235,6 +209,9 @@ int getop(char s[])
 			s[0] = '\0';
 			//return s;	// Not sure what to return on ERRORs
 		}
+	}
+	if (temp == '=') { 	/* for put_var() */
+		return PUT_VAR_ID;
 	}
 	if (!isdigit(c) && c != '.' && c != '-')
 		return c;	/* not a number */
@@ -266,6 +243,7 @@ int bufp = 0;		/* next free position in buf */
 
 int getch(void)		/* get a (possibly pushed back) character */
 {
+	printf("\ninside getch()\n");
 	return (bufp > 0) ? buf[--bufp] : getchar();
 }
 
@@ -304,28 +282,17 @@ void clearstack(void)	/* ! = clear the stack */
 	val[0] = '\0';
 }
 
-void put_var(char s[])
+void put_var(char s[], double value)
 {
-	int n = 0;
-	int t = 0;
-	char temp_name;
-	char temp_val_string[MAXVAL];
+	char find_var = s[0];
 
-	if (isalpha(s[n])) {
-		temp_name = var_name[var_pos] = s[n++]; /* Get var name */
-	}
-	while (isdigit(s[n]) || s[n] == '.')
-		temp_val_string[t++] = s[n++];	/* Get string of value */
-	temp_val_string[t] = '\0';
-	n = 0;
-	while (n < var_pos) {	/* Check if variable already exists */
-		if (var_name[n] == temp_name) {
-			var_value[n] = atof(temp_val_string);
+	for (int i = 0; i < var_pos; i++) {	/* Check if variable already exists */
+		if (var_name[i] == find_var) {
+			var_value[i] = value;
 			return;
 		}
-		n++;
 	}
-	var_value[var_pos++] = atof(temp_val_string);
+	var_value[var_pos++] = value;
 }
 
 double get_var(char s[])
@@ -333,12 +300,9 @@ double get_var(char s[])
 	int n = 0;
 	char find_var = s[0];
 
-	while (n < var_pos) {
-		if (var_name[n] == find_var) {
-			return var_value[n];
-		} else {
-			n++;
-		}
+	for (int i = 0; i < var_pos; i++) {
+		if (var_name[i] == find_var)
+			return var_value[i];
 	}
 	printf("\nERROR - Variable not found.");
 }
