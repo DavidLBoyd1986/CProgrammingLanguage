@@ -8,8 +8,8 @@
 #define MAXVAL	100		/* maximum depth of val stack */
 #define NUMBER_ID '0'	 	/* signal that a number was found */
 #define FUNCTION_ID '1' 	/* signal that perform_function() needs ran */
-#define PUT_VAR_ID '2'		/* signal that var_assign() needs ran */
-#define GET_VAR_ID '3'		/* signal that var_assign() needs ran */
+#define EQUAL_ID '2'		/* signal that var_assign() needs ran */
+#define VAR_ID '3'		/* signal that var_assign() needs ran */
 
 int getop(char []);
 void push(double);
@@ -20,21 +20,31 @@ void duplicatech(void);
 void swapchs(void);
 void clearstack(void);
 void printArray(double []);
-void put_var(char [], double);
-double get_var(char[]);
+void put_var(char, double);
+double get_var(int);
+int find_val_in_array(char, char[]);
 
 char var_name[MAXVAL];	/* variable name stack */
 double var_value[MAXVAL];	/* variable value stack */
 int var_pos = 0;	/* next free variable position */
 
-// TODO - Create an updated program that correctly
-//	handles functions and variables. It should
-//	work like the polish method.
-//	2 5 pow  :  5 exp  : 20 sin  
-//	x 5 =	: for assignment of variables
+// Handling Functions and Variables:
+//	2 5 pow ; 5 exp ; 20 sin  
+//	x 5 = ; 5 x =
+
+// Variables:
+// 1. Return string with the variable name as the only char.
+// 2. In case for found variable, Search in array for value:
+//	a. return -1 if not found.
+// 	b. return pos if found.
+// 3-1. If found get variable value, and push on stack.
+// 3-2. If not found, save char value of variable name in temp variable.
+// 4. If '=' appears, pop() value and assign variable / update variable arrays.
+// 5. if an 'op' (-,+,/,*) appears while temp variable is assigned.
+//	a. Error, variable is not assigned, clear temp_var, and pop value.
 
 // IMPORTANT - The reason it waits on getop
-// is it's  because I'm removimg the \n from end of array.
+// is it's because I'm removimg the \n from end of array.
 // SOLUTION - I had to add an ungetch in getop()
 // It was removing the \n after getting the function name
 
@@ -43,16 +53,18 @@ int var_pos = 0;	/* next free variable position */
 // This is why the print statements don't appear until you
 // input \n.
 
+
 /* reverse polish calculator */
 int main()
 {
 	int type;
 	double op2;
 	double temp_val;
+	int found_var;
+	char temp_var = 0;
 	char s[MAXOP];
 
 	while ((type = getop(s)) != EOF) {
-		printf("\ntop of main loop, type = %i\n", type);
 		switch (type) {
 		case NUMBER_ID:
 			push(atof(s));
@@ -65,13 +77,18 @@ int main()
 				push(perform_function(s, op2, 0));
 			}
 			break;
-		case PUT_VAR_ID:
-			printf("\nInside PUT_VAR_ID\n");
-			put_var(s, pop());
+		case VAR_ID:
+			found_var = find_val_in_array(s[0], var_name);
+			if (found_var == -1)
+				temp_var = s[0];
+			else
+				push(get_var(found_var));
 			break;
-		case GET_VAR_ID:
-			printf("\nInside GET_VAR_ID\n");
-			push(get_var(s));
+		case '=':
+			if (temp_var == 0)
+				printf("No var_name to assign value to");
+			else
+				put_var(temp_var, pop());
 			break;
 		case '+':
 			push(pop() + pop());
@@ -110,11 +127,7 @@ int main()
 			clearstack();
 			break;
 		case '\n':
-			// I need to update put_var to take in the char and double value
-			temp_val = pop();
-			var_name[var_pos] = 'p';
-			var_value[var_pos++] = temp_val;
-			printf("\t%.8g\n", temp_val);
+			printf("\t%.8g\n", pop());
 			break;
 		default:
 			printf("error: unknown command %s\n", s);
@@ -174,40 +187,29 @@ void ungetch(int);
 int getop(char s[])
 {
 	int i, c, neg, temp;
+
 	i = 0; // Not initializing this was a bad bug
 
-	printf("\nInside getop\n");
 	while ((s[0] = c = getch()) == ' ' || c == '\t') { // Remove whitespace
 		;
 	}
-	printf("\nInside getop, after clearing white space\n");
 	s[1] = '\0'; 	// Required to make the single char a string
 	if (isalpha(c)) {
-		//printf("\ngetp, after first isalpha, c = %i\n", c);
 		if (isalpha(temp = getch())) { // for perform_function()
 			s[++i] = temp;
-			//printf("\ninside 2nd isalpha, s = %s\n", s);
 			while (isalpha(c = getch())) {
 				s[++i] = c;
 			}
 			ungetch(c);
 			s[++i] = '\0';
-			//printf("\nfinal string in getop, s = %s\n", s);
 			return FUNCTION_ID;
 		} else if (temp == ' ' ) { 	/* for get_var() */
-			//printf("\ntemp == ' ', temp = %i\n", temp);
-			ungetch(temp);
-			//s[++i] = '\0';
-			return GET_VAR_ID;
+			return VAR_ID;
 		} else {			/* ERROR Handling */
 			ungetch(temp);
-			printf("\nThis input is invalid: %s\n", s);
 			s[0] = '\0';
 			//return s;	// Not sure what to return on ERRORs
 		}
-	}
-	if (temp == '=') { 	/* for put_var() */
-		return PUT_VAR_ID;
 	}
 	if (!isdigit(c) && c != '.' && c != '-')
 		return c;	/* not a number */
@@ -277,29 +279,29 @@ void clearstack(void)	/* ! = clear the stack */
 	val[0] = '\0';
 }
 
-void put_var(char s[], double value)
+void put_var(char c, double value)
 {
-	char find_var = s[0];
-
-	for (int i = 0; i < var_pos; i++) {	/* Check if variable already exists */
-		if (var_name[i] == find_var) {
-			var_value[i] = value;
-			return;
-		}
+	int n = find_val_in_array(c, var_name);
+	if (n == -1) {
+		var_name[var_pos] = c;
+		var_value[var_pos++] = value;
+	} else {
+		var_value[n] = value;
 	}
-	var_value[var_pos++] = value;
 }
 
-double get_var(char s[])
+double get_var(int i)
 {
-	int n = 0;
-	char find_var = s[0];
+	return var_value[i];
+}
 
-	for (int i = 0; i < var_pos; i++) {
-		if (var_name[i] == find_var)
-			return var_value[i];
+int find_val_in_array(char c, char array[])
+{
+	for (int i = 0; i <= var_pos; i++) {
+		if (array[i] == c)
+			return i;
 	}
-	printf("\nERROR - Variable not found.");
+	return -1;
 }
 
 void printArray(double array[])
