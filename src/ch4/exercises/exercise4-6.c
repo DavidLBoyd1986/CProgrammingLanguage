@@ -10,6 +10,8 @@
 #define FUNCTION_ID '1' 	/* signal that perform_function() needs ran */
 #define EQUAL_ID '2'		/* signal that var_assign() needs ran */
 #define VAR_ID '3'		/* signal that var_assign() needs ran */
+#define TRUE 1			/* true boolean value */
+#define FALSE 0			/* false boolean value */
 
 int getop(char []);
 void push(double);
@@ -59,9 +61,9 @@ int main()
 {
 	int type;
 	double op2;
-	double temp_val;
 	int found_var;
 	char temp_var = 0;
+	int var_assigned = FALSE;
 	char s[MAXOP];
 
 	while ((type = getop(s)) != EOF) {
@@ -85,10 +87,12 @@ int main()
 				push(get_var(found_var));
 			break;
 		case '=':
-			if (temp_var == 0)
+			if (temp_var == 0) {
 				printf("No var_name to assign value to");
-			else
+			} else {
 				put_var(temp_var, pop());
+				var_assigned = TRUE;
+			}
 			break;
 		case '+':
 			push(pop() + pop());
@@ -127,7 +131,10 @@ int main()
 			clearstack();
 			break;
 		case '\n':
-			printf("\t%.8g\n", pop());
+			if (var_assigned == FALSE)
+				printf("\t%.8g\n", pop());
+			else
+				var_assigned = FALSE;
 			break;
 		default:
 			printf("error: unknown command %s\n", s);
@@ -150,11 +157,9 @@ void push(double f)
 		printf("error: stack full, can't push %g\n", f);
 }
 
-/* pop: po and return top value from stack */
+/* pop: pop and return top value from stack */
 double pop(void)
 {
-	double temp_val;
-
 	if (sp > 0) {
 		return val[--sp];
 	} else {
