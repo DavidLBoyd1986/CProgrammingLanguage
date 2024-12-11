@@ -22,13 +22,9 @@ void duplicatech(void);
 void swapchs(void);
 void clearstack(void);
 void printArray(double []);
-void put_var(char, double);
-double get_var(int);
-int find_val_in_array(char, char[]);
-
-char var_name[MAXVAL];	/* variable name stack */
-double var_value[MAXVAL];	/* variable value stack */
-int var_pos = 0;	/* next free variable position */
+void put_var(char, double, char[], double[], int);
+double get_var(int, double[]);
+int find_val_in_array(char, char[], int);
 
 // Handling Functions and Variables:
 //	2 5 pow ; 5 exp ; 20 sin  
@@ -61,9 +57,11 @@ int main()
 {
 	int type;
 	double op2;
+	char var_name[MAXVAL];	/* variable name stack */
+	double var_value[MAXVAL];	/* variable value stack */
+	int var_pos = 0;	/* next free variable position */
 	int found_var;
 	char temp_var = 0;
-	double temp_val;
 	int var_assigned = FALSE;
 	char s[MAXOP];
 
@@ -81,17 +79,17 @@ int main()
 			}
 			break;
 		case VAR_ID:
-			found_var = find_val_in_array(s[0], var_name);
+			found_var = find_val_in_array(s[0], var_name, var_pos);
 			if (found_var == -1)
 				temp_var = s[0];
 			else
-				push(get_var(found_var));
+				push(get_var(found_var, var_value));
 			break;
 		case '=':
 			if (temp_var == 0) {
 				printf("No var_name to assign value to");
 			} else {
-				put_var(temp_var, pop());
+				put_var(temp_var, pop(), var_name, var_value, var_pos);
 				var_assigned = TRUE;
 			}
 			break;
@@ -132,13 +130,10 @@ int main()
 			clearstack();
 			break;
 		case '\n':
-			if (var_assigned == FALSE) {
-				temp_val = pop();
-				put_var('z', temp_val); // Save printed value
-				printf("\t%.8g\n", temp_val);
-			} else {
+			if (var_assigned == FALSE)
+				printf("\t%.8g\n", pop());
+			else
 				var_assigned = FALSE;
-			}
 			break;
 		default:
 			printf("error: unknown command %s\n", s);
@@ -288,26 +283,26 @@ void clearstack(void)	/* ! = clear the stack */
 	val[0] = '\0';
 }
 
-void put_var(char c, double value)
+void put_var(char c, double value, char var_array[], double val_array[], int array_pos)
 {
-	int n = find_val_in_array(c, var_name);
+	int n = find_val_in_array(c, var_array, array_pos);
 	if (n == -1) {
-		var_name[var_pos] = c;
-		var_value[var_pos++] = value;
+		var_array[array_pos] = c;
+		val_array[array_pos++] = value;
 	} else {
-		var_value[n] = value;
+		val_array[n] = value;
 	}
 }
 
-double get_var(int i)
+double get_var(int i, double var_array[])
 {
-	return var_value[i];
+	return var_array[i];
 }
 
-int find_val_in_array(char c, char array[])
+int find_val_in_array(char c, char var_array[], int array_pos)
 {
-	for (int i = 0; i <= var_pos; i++) {
-		if (array[i] == c)
+	for (int i = 0; i <= array_pos; i++) {
+		if (var_array[i] == c)
 			return i;
 	}
 	return -1;
