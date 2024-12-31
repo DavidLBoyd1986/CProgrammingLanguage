@@ -1,6 +1,10 @@
 
 Questions:
 
+exercise 4-10
+
+When checking i == len in getop, I discovered, len = 8 when undeclared, but if it's static, it is 0;
+
 Types:
 
 1. Why can you create a signed char? Negative values don't seem to print any Chars.
