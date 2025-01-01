@@ -222,21 +222,13 @@ int getop(char s[])
 		s[i++] = line [p++];
 
 	if (isalpha(line[p])) {
-		if (isalpha(temp = line[++p])) { // for perform_function()
-			s[++i] = temp;
-			while (isalpha(line[++p])) {
-				s[++i] = line[p];
-			}
-			--p; // Step back since last check wasn't alpha
-			s[++i] = '\0';
-			return FUNCTION_ID;
-		} else if (temp == ' ' ) { 	/* for get_var() */
+		while (isalpha(line[p]))
+			s[i++] = line[p++];
+		s[i++] = '\0';
+		if (strlen(s) == 1)
 			return VAR_ID;
-		} else {			/* ERROR Handling */
-			--p;
-			s[0] = '\0';
-			//return s;	// Not sure what to return on ERRORs
-		}
+		else
+			return FUNCTION_ID;
 	}
 	if (!isdigit(line[p]) && line[p] != '.') {
 		return line[p++];	/* not a number */

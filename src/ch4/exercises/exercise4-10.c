@@ -200,8 +200,10 @@ int getop(char s[])
 	int i, neg, temp;
 	static int p, len;
 
+	// static is what made it not reset the line each loop
+
 	// why is static int len == 0, but just int len == 8;
-	//i = 0; // Not initializing this was a bad bug
+	// I think the non-static int was 8 because it had it's size determined
 	
 	char line[MAXVAL];
 	printf("\nThis is i at top of getop: %i\n", i);
@@ -232,18 +234,18 @@ int getop(char s[])
 	}
 	if (!isdigit(line[p]) && line[p] != '.') {
 		return line[p++];	/* not a number */
-	
 	}
 	if (isdigit(line[p]))	 {	/* collect integer part */
 		while (isdigit(line[p]))
 			s[i++] = line[p++];
 	}
 	if (line[p] == '.') {		/* collect fraction part */
-		while (isdigit(line[p]))
+		s[i++] = line[p++]; // Have to move to the next char to get past the .
+		while (isdigit(line[p])) {
 			s[i++] = line[p++];
+		}
 	}
 	s[i] = '\0';
-	printf("At end of getopr add end of string, s = %s\n", s);
 	return NUMBER_ID;
 }
 
