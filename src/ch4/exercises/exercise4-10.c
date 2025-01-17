@@ -23,13 +23,13 @@ void duplicatech(void);
 void swapchs(void);
 void clearstack(void);
 void printArray(double []);
-void put_var(char, double);
+void put_var(int, double);
 double get_var(int);
-int find_val_in_array(char, char[]);
+int is_var_set(int, int[]);
 
-char var_name[MAXVAL];	/* variable name stack */
+int var_set[MAXVAL] = {0};	/* variable name stack */
 double var_value[MAXVAL];	/* variable value stack */
-int var_pos = 0;	/* next free variable position */
+// int var_pos = 0;	/* next free variable position */
 
 // Handling Functions and Variables:
 //	2 5 pow ; 5 exp ; 20 sin  
@@ -56,20 +56,45 @@ int var_pos = 0;	/* next free variable position */
 // This is why the print statements don't appear until you
 // input \n.
 
+// Bug Fixed: Overwriting existing variables is overwriting the wrong variable
+// I'm pretty sure this is because VAR_ID automatically finds the var value
+// if the var name exists, and pushes it onto the stack.
+
+// This means the var_name is NOT saved in temp_var
+// and temp_var is the last saved var_name that was added
+// which then finds the last position in the array.
+
+// Solution - hold temp_var everytime, still push value on stack,
+// but pop and remove value when setting variable name.
+// This seems very hacky, will look for better solution
+
+// There is still a bug, but it is half fixed.
+// It updates the value correctly if the var_name comes first
+// Need to handle it if var_name comes second.
+
+// This bug is because the var value was pushed on the stack
+// So, if n comes second, then when pop() is used, it pops the
+// previous value that was pushed from retrieving the var value.
+
+// Doing a rewrite of var, so instead of using two arrays,
+// the array position is determined by the int value of the char
+// that is the var_name
 
 /* reverse polish calculator */
 int main()
 {
 	int type;
 	double op2;
-	int found_var;
-	char temp_var = 0;
-	double temp_val;
+	int var_found = -1;
+	int temp_var = 0;
+	double pop_holder;
 	int var_assigned = FALSE;
+	int position = -1; // added to track the position of each value in formula
+	int var_pos = -1; // added to track position where var name was given
 	char s[MAXOP];
 
 	while ((type = getop(s)) != EOF) {
-		printf("\ns at top of main while, s = %s\n", s);
+		position++; // track position in formula
 		switch (type) {
 		case NUMBER_ID:
 			push(atof(s));
@@ -83,19 +108,32 @@ int main()
 			}
 			break;
 		case VAR_ID:
-			found_var = find_val_in_array(s[0], var_name);
-			if (found_var == -1)
-				temp_var = s[0];
-			else
-				push(get_var(found_var));
+			temp_var = s[0]; // hold var name to use if = follows 
+			var_found = is_var_set(temp_var, var_set);
+			if (var_found != 0) { 
+				push(get_var(temp_var)); // Pushes the found var
+				// Track the var name position for removing the pushed var if assigned
+				if (position == 0)
+					var_pos = 0;
+				else if (position == 1)
+					var_pos = 1;
+			}
 			break;
 		case '=':
 			if (temp_var == 0) {
-				printf("No var_name to assign value to");
-			} else {
-				put_var(temp_var, pop());
-				var_assigned = TRUE;
+				printf("\n/Error - No variable to assign.\n");
 			}
+			// delete pushed found var before assigning new variable
+			if (var_pos == 1)
+				pop_holder = pop(); 
+			put_var(temp_var, pop());
+			var_assigned = TRUE;
+			// delete pushed found var after assigning new variable
+			if (var_pos == 0)
+				pop_holder = pop(); // delete found var pushed
+			temp_var = 0;	// reset to default value
+			var_found = -1; // reset to default value
+			var_pos = -1; // reset to default value
 			break;
 		case '+':
 			push(pop() + pop());
@@ -135,12 +173,15 @@ int main()
 			break;
 		case '\n':
 			if (var_assigned == FALSE) {
-				temp_val = pop();
-				put_var('z', temp_val); // Save printed value
-				printf("\t%.8g\n", temp_val);
+				pop_holder = pop();
+				put_var('z', pop_holder); // Save printed value
+				printf("\t%.8g\n", pop_holder);
 			} else {
 				var_assigned = FALSE;
 			}
+			var_found = -1;
+			var_pos = -1;
+			position = -1;
 			break;
 		default:
 			printf("error: unknown command %s\n", s);
@@ -174,8 +215,6 @@ double pop(void)
 	}
 }
 
-#include <math.h>
-
 /* perform the math function provided */
 double perform_function(char s[], double op1, double op2)
 {
@@ -188,11 +227,6 @@ double perform_function(char s[], double op1, double op2)
 	}
 }
 
-// The below functions getop(), getch(), ungetch() all get the user input:
-#include <ctype.h>
-
-int getch(void);
-void ungetch(int);
 
 /* getop: get next operator or numeric operand */
 int getop(char s[])
@@ -200,14 +234,14 @@ int getop(char s[])
 	int i, neg, temp;
 	static int p, len;
 
-	// static is what made it not reset the line each loop
-
-	// why is static int len == 0, but just int len == 8;
-	// I think the non-static int was 8 because it had it's size determined
+	// static is what made it not reset the line each loop. i.e. fixed it.
+	
+	// why is static int len == 0, but just int len == 8?
+	// static int made (p == len) work but non-static int didn't
+	// This is because static int uninitialized is auto set to 0
+	// if static isn't used, int's that aren't initialized return junk data
 	
 	char line[MAXVAL];
-	printf("\nThis is i at top of getop: %i\n", i);
-	printf("This is len at top of getop: %i\n", len);
 
 	if (p == len) {
 		len = get_line(line);
@@ -249,11 +283,6 @@ int getop(char s[])
 	return NUMBER_ID;
 }
 
-#define BUFSIZE 100
-
-char buf[BUFSIZE]; 	/* buffer for ungetch */
-int bufp = 0;		/* next free position in buf */
-
 int get_line(char line[])
 {
 	int i, c;
@@ -265,19 +294,6 @@ int get_line(char line[])
 		line[i++] = c;
 	line[i] = '\0';
 	return i;
-}
-
-int getch(void)		/* get a (possibly pushed back) character */
-{
-	return (bufp > 0) ? buf[--bufp] : getchar();
-}
-
-void ungetch(int c)	/* push character back on input */
-{
-	if (bufp >= BUFSIZE)
-		printf("ungetch: too many characters\n");
-	else
-		buf[bufp++] = c;
 }
 
 // All the below functionw work with the val array:
@@ -307,15 +323,10 @@ void clearstack(void)	/* ! = clear the stack */
 	val[0] = '\0';
 }
 
-void put_var(char c, double value)
+void put_var(int i, double value)
 {
-	int n = find_val_in_array(c, var_name);
-	if (n == -1) {
-		var_name[var_pos] = c;
-		var_value[var_pos++] = value;
-	} else {
-		var_value[n] = value;
-	}
+	var_set[i] = 1;
+	var_value[i] = value;
 }
 
 double get_var(int i)
@@ -323,13 +334,11 @@ double get_var(int i)
 	return var_value[i];
 }
 
-int find_val_in_array(char c, char array[])
+int is_var_set(int i, int array[])
 {
-	for (int i = 0; i <= var_pos; i++) {
-		if (array[i] == c)
-			return i;
-	}
-	return -1;
+	if (array[i] != 0)
+		return TRUE;
+	return FALSE;
 }
 
 void printArray(double array[])
@@ -342,3 +351,4 @@ void printArray(double array[])
 	}
 	printf("}");
 }
+
