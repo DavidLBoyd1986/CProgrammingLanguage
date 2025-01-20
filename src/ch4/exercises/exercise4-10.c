@@ -29,66 +29,19 @@ int is_var_set(int, int[]);
 
 int var_set[MAXVAL] = {0};	/* variable name stack */
 double var_value[MAXVAL];	/* variable value stack */
-// int var_pos = 0;	/* next free variable position */
 
 // Handling Functions and Variables:
 //	2 5 pow ; 5 exp ; 20 sin  
 //	x 5 = ; 5 x =
-
-// Variables:
-// 1. Return string with the variable name as the only char.
-// 2. In case for found variable, Search in array for value:
-//	a. return -1 if not found.
-// 	b. return pos if found.
-// 3-1. If found get variable value, and push on stack.
-// 3-2. If not found, save char value of variable name in temp variable.
-// 4. If '=' appears, pop() value and assign variable / update variable arrays.
-// 5. if an 'op' (-,+,/,*) appears while temp variable is assigned.
-//	a. Error, variable is not assigned, clear temp_var, and pop value.
-
-// IMPORTANT - The reason it waits on getop
-// is it's because I'm removimg the \n from end of array.
-// SOLUTION - I had to add an ungetch in getop()
-// It was removing the \n after getting the function name
-
-// IMPORTANT - getchar function provided by C stdio.h
-// stores the input in a buffer until a /n or EOF is reached.
-// This is why the print statements don't appear until you
-// input \n.
-
-// Bug Fixed: Overwriting existing variables is overwriting the wrong variable
-// I'm pretty sure this is because VAR_ID automatically finds the var value
-// if the var name exists, and pushes it onto the stack.
-
-// This means the var_name is NOT saved in temp_var
-// and temp_var is the last saved var_name that was added
-// which then finds the last position in the array.
-
-// Solution - hold temp_var everytime, still push value on stack,
-// but pop and remove value when setting variable name.
-// This seems very hacky, will look for better solution
-
-// There is still a bug, but it is half fixed.
-// It updates the value correctly if the var_name comes first
-// Need to handle it if var_name comes second.
-
-// This bug is because the var value was pushed on the stack
-// So, if n comes second, then when pop() is used, it pops the
-// previous value that was pushed from retrieving the var value.
-
-// Doing a rewrite of var, so instead of using two arrays,
-// the array position is determined by the int value of the char
-// that is the var_name
 
 /* reverse polish calculator */
 int main()
 {
 	int type;
 	double op2;
-	int var_found = -1;
-	int temp_var = 0;
 	double pop_holder;
 	int var_assigned = FALSE;
+	int temp_var = -1;
 	int position = -1; // added to track the position of each value in formula
 	int var_pos = -1; // added to track position where var name was given
 	char s[MAXOP];
@@ -109,8 +62,7 @@ int main()
 			break;
 		case VAR_ID:
 			temp_var = s[0]; // hold var name to use if = follows 
-			var_found = is_var_set(temp_var, var_set);
-			if (var_found != 0) { 
+			if (is_var_set(temp_var, var_set)); { 
 				push(get_var(temp_var)); // Pushes the found var
 				// Track the var name position for removing the pushed var if assigned
 				if (position == 0)
@@ -123,17 +75,12 @@ int main()
 			if (temp_var == 0) {
 				printf("\n/Error - No variable to assign.\n");
 			}
-			// delete pushed found var before assigning new variable
 			if (var_pos == 1)
-				pop_holder = pop(); 
+				pop(); // delete the pushed found_var
 			put_var(temp_var, pop());
-			var_assigned = TRUE;
-			// delete pushed found var after assigning new variable
 			if (var_pos == 0)
-				pop_holder = pop(); // delete found var pushed
-			temp_var = 0;	// reset to default value
-			var_found = -1; // reset to default value
-			var_pos = -1; // reset to default value
+				pop(); // delete the pushed found_var
+			var_assigned = TRUE; // Skip printing value on \n case
 			break;
 		case '+':
 			push(pop() + pop());
@@ -179,9 +126,9 @@ int main()
 			} else {
 				var_assigned = FALSE;
 			}
-			var_found = -1;
-			var_pos = -1;
-			position = -1;
+			temp_var = -1;	// reset to default value
+			var_pos = -1;	// reset to default value
+			position = -1;	// reset to default value
 			break;
 		default:
 			printf("error: unknown command %s\n", s);
@@ -233,14 +180,6 @@ int getop(char s[])
 {
 	int i, neg, temp;
 	static int p, len;
-
-	// static is what made it not reset the line each loop. i.e. fixed it.
-	
-	// why is static int len == 0, but just int len == 8?
-	// static int made (p == len) work but non-static int didn't
-	// This is because static int uninitialized is auto set to 0
-	// if static isn't used, int's that aren't initialized return junk data
-	
 	char line[MAXVAL];
 
 	if (p == len) {
@@ -319,7 +258,6 @@ void swapchs(void)	/* # = swap top two chars in array. */
 
 void clearstack(void)	/* ! = clear the stack */
 {
-	// Don't think buffer needs cleared
 	val[0] = '\0';
 }
 

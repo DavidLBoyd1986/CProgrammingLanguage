@@ -35,26 +35,9 @@ int var_pos = 0;	/* next free variable position */
 //	x 5 = ; 5 x =
 
 // Variables:
-// 1. Return string with the variable name as the only char.
-// 2. In case for found variable, Search in array for value:
-//	a. return -1 if not found.
-// 	b. return pos if found.
-// 3-1. If found get variable value, and push on stack.
-// 3-2. If not found, save char value of variable name in temp variable.
-// 4. If '=' appears, pop() value and assign variable / update variable arrays.
-// 5. if an 'op' (-,+,/,*) appears while temp variable is assigned.
-//	a. Error, variable is not assigned, clear temp_var, and pop value.
-
-// IMPORTANT - The reason it waits on getop
-// is it's because I'm removimg the \n from end of array.
-// SOLUTION - I had to add an ungetch in getop()
-// It was removing the \n after getting the function name
-
-// IMPORTANT - getchar function provided by C stdio.h
-// stores the input in a buffer until a /n or EOF is reached.
-// This is why the print statements don't appear until you
-// input \n.
-
+// There is a bug with the variables in this implementation.
+// I fixed the bug in exercise4-10.c, but was too lazy to fix it in here.
+// Might fix it at a later time.
 
 /* reverse polish calculator */
 int main()
