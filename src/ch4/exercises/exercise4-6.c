@@ -22,35 +22,31 @@ void duplicatech(void);
 void swapchs(void);
 void clearstack(void);
 void printArray(double []);
-void put_var(char, double);
+void put_var(int, double);
 double get_var(int);
-int find_val_in_array(char, char[]);
+int is_var_set(int, int []);
 
-char var_name[MAXVAL];	/* variable name stack */
+int var_set[MAXVAL];	/* variable name stack */
 double var_value[MAXVAL];	/* variable value stack */
-int var_pos = 0;	/* next free variable position */
 
 // Handling Functions and Variables:
 //	2 5 pow ; 5 exp ; 20 sin  
 //	x 5 = ; 5 x =
-
-// Variables:
-// There is a bug with the variables in this implementation.
-// I fixed the bug in exercise4-10.c, but was too lazy to fix it in here.
-// Might fix it at a later time.
 
 /* reverse polish calculator */
 int main()
 {
 	int type;
 	double op2;
-	int found_var;
-	char temp_var = 0;
-	double temp_val;
+	double pop_holder;
 	int var_assigned = FALSE;
+	char temp_var = -1;
+	char position = -1;
+	char var_pos = -1;
 	char s[MAXOP];
 
 	while ((type = getop(s)) != EOF) {
+		position++; // track position in formula
 		switch (type) {
 		case NUMBER_ID:
 			push(atof(s));
@@ -64,19 +60,26 @@ int main()
 			}
 			break;
 		case VAR_ID:
-			found_var = find_val_in_array(s[0], var_name);
-			if (found_var == -1)
-				temp_var = s[0];
-			else
-				push(get_var(found_var));
+			temp_var = s[0]; //hold var name to use if = follows
+			if (is_var_set(temp_var, var_set)); {
+				push(get_var(temp_var)); // Push the found var
+				// Track the var name position for removing the pushed var if assigned
+				if (position == 0)
+					var_pos = 0;
+				else if (position == 1)
+					var_pos = 1;
+			}
 			break;
 		case '=':
 			if (temp_var == 0) {
-				printf("No var_name to assign value to");
-			} else {
-				put_var(temp_var, pop());
-				var_assigned = TRUE;
+				printf("No var_set to assign value to");
 			}
+			if (var_pos == 1)
+				pop();	// delete the pushed found_var
+			put_var(temp_var, pop());
+			if (var_pos == 0)
+				pop();	// delete the pushed found_var
+			var_assigned = TRUE;	// Skip printing value on \n case
 			break;
 		case '+':
 			push(pop() + pop());
@@ -116,12 +119,15 @@ int main()
 			break;
 		case '\n':
 			if (var_assigned == FALSE) {
-				temp_val = pop();
-				put_var('z', temp_val); // Save printed value
-				printf("\t%.8g\n", temp_val);
+				pop_holder = pop();
+				put_var('z', pop_holder); // Save printed value
+				printf("\t%.8g\n", pop_holder);
 			} else {
 				var_assigned = FALSE;
 			}
+			temp_var = -1; // reset to default value
+			var_pos = -1;  // reset to default value
+			position = -1; // reset to default value
 			break;
 		default:
 			printf("error: unknown command %s\n", s);
@@ -271,15 +277,10 @@ void clearstack(void)	/* ! = clear the stack */
 	val[0] = '\0';
 }
 
-void put_var(char c, double value)
+void put_var(int i, double value)
 {
-	int n = find_val_in_array(c, var_name);
-	if (n == -1) {
-		var_name[var_pos] = c;
-		var_value[var_pos++] = value;
-	} else {
-		var_value[n] = value;
-	}
+	var_set[i] = 1;
+	var_value[i] = value;
 }
 
 double get_var(int i)
@@ -287,13 +288,11 @@ double get_var(int i)
 	return var_value[i];
 }
 
-int find_val_in_array(char c, char array[])
+int is_var_set(int i, int array[])
 {
-	for (int i = 0; i <= var_pos; i++) {
-		if (array[i] == c)
-			return i;
-	}
-	return -1;
+	if (array[i] != 0)
+		return TRUE;
+	return FALSE;
 }
 
 void printArray(double array[])
