@@ -3,6 +3,10 @@
 
 int main(){
 
+	char testStringDash[100];
+	testStringDash[0] = '-';
+	printf("\ntestStringDash = %s\n", testStringDash);
+
 	char testString[100] = "Hello World";
 	int testStringLength;
 	printf("\nString Output: %s\n", testString);
