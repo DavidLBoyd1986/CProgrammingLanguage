@@ -59,7 +59,7 @@ void swap(int v[], int i, int j)
 
 void print_array(int array[], int len)
 {
-	printf("{%i", array[0]);
+	printf("{%i,", array[0]);
 	for (int i = 1; i < len - 1; i++)
 		printf(" %i,", array[i]);
 	printf(" %i}\n", array[len-1]);
