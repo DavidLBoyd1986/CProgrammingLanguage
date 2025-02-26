@@ -13,7 +13,7 @@ void main()
 	printf("\nInitial Array: ");
 	print_array(test_array_one, array_length);
 	printf("\n");
-	qsort(test_array_one, 0, array_length);
+	qsort(test_array_one, 0, array_length - 1);
 	printf("\nFinal Sorted Array: ");
 	print_array(test_array_one, array_length);
 	printf("\n");
