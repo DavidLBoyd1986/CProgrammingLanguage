@@ -1,8 +1,9 @@
 #include <stdio.h>
-#include <stdlib.h> 	/* for atof() */
+#include <stdlib.h>	 	/* for atof() */
 #include <math.h>
 #include <ctype.h>
 #include <string.h>
+#include <unistd.h>
 
 #define MAXOP	100 		/* max size of operand or opertor */
 #define MAXVAL	100		/* maximum depth of val stack */
@@ -185,11 +186,15 @@ void ungetch(int);
 int getop(char s[])
 {
 	int i, c, neg, temp;
+	static int prevC;
 
 	i = 0; // Not initializing this was a bad bug
 
-	while ((s[0] = c = getch()) == ' ' || c == '\t') { // Remove whitespace
-		;
+	(prevC > 0) ? (c = prevC) : (s[0] = c = getch());
+
+	if (isblank(c)) { // Remove whitespace
+		while (isblank(s[0] = c = getch()))
+			;
 	}
 	s[1] = '\0'; 	// Required to make the single char a string
 	if (isalpha(c)) {
@@ -198,24 +203,26 @@ int getop(char s[])
 			while (isalpha(c = getch())) {
 				s[++i] = c;
 			}
-			ungetch(c);
+			prevC = c;
 			s[++i] = '\0';
 			return FUNCTION_ID;
 		} else if (temp == ' ' ) { 	/* for get_var() */
 			return VAR_ID;
 		} else {			/* ERROR Handling */
-			ungetch(temp);
+			prevC = c;
 			s[0] = '\0';
 			//return s;	// Not sure what to return on ERRORs
 		}
 	}
-	if (!isdigit(c) && c != '.' && c != '-')
+	if (!isdigit(c) && c != '.' && c != '-') {
+		prevC = 0;
 		return c;	/* not a number */
+	}
 	i = 0;
 	// Need to return only '-' if it isn't followed by a digit
 	if (c == '-')
 		if (!isdigit(c = getch())) {
-			ungetch(c);
+			prevC = c;
 			return '-';
 		} else {
 			s[++i] = c;
@@ -228,7 +235,7 @@ int getop(char s[])
 			;
 	s[i] = '\0';
 	if (c != EOF)
-		ungetch(c);
+		prevC = c;
 	return NUMBER_ID;
 }
 
@@ -239,15 +246,7 @@ int bufp = 0;		/* next free position in buf */
 
 int getch(void)		/* get a (possibly pushed back) character */
 {
-	return (bufp > 0) ? buf[--bufp] : getchar();
-}
-
-void ungetch(int c)	/* push character back on input */
-{
-	if (bufp >= BUFSIZE)
-		printf("ungetch: too many characters\n");
-	else
-		buf[bufp++] = c;
+	return getchar();
 }
 
 // All the below functionw work with the val array:

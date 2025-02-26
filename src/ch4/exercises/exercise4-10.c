@@ -10,7 +10,10 @@
 #define FUNCTION_ID '1' 	/* signal that perform_function() needs ran */
 #define EQUAL_ID '2'		/* signal that var_assign() needs ran */
 #define VAR_ID '3'		/* signal that var_assign() needs ran */
+#define TRUE 1			/* true boolean value */
+#define FALSE 0			/* false boolean value */
 
+int get_line(char []);
 int getop(char []);
 void push(double);
 double pop(void);
@@ -20,51 +23,31 @@ void duplicatech(void);
 void swapchs(void);
 void clearstack(void);
 void printArray(double []);
-void put_var(char, double);
+void put_var(int, double);
 double get_var(int);
-int find_val_in_array(char, char[]);
+int is_var_set(int, int[]);
 
-char var_name[MAXVAL];	/* variable name stack */
+int var_set[MAXVAL] = {0};	/* variable name stack */
 double var_value[MAXVAL];	/* variable value stack */
-int var_pos = 0;	/* next free variable position */
 
 // Handling Functions and Variables:
 //	2 5 pow ; 5 exp ; 20 sin  
 //	x 5 = ; 5 x =
-
-// Variables:
-// 1. Return string with the variable name as the only char.
-// 2. In case for found variable, Search in array for value:
-//	a. return -1 if not found.
-// 	b. return pos if found.
-// 3-1. If found get variable value, and push on stack.
-// 3-2. If not found, save char value of variable name in temp variable.
-// 4. If '=' appears, pop() value and assign variable / update variable arrays.
-// 5. if an 'op' (-,+,/,*) appears while temp variable is assigned.
-//	a. Error, variable is not assigned, clear temp_var, and pop value.
-
-// IMPORTANT - The reason it waits on getop
-// is it's because I'm removimg the \n from end of array.
-// SOLUTION - I had to add an ungetch in getop()
-// It was removing the \n after getting the function name
-
-// IMPORTANT - getchar function provided by C stdio.h
-// stores the input in a buffer until a /n or EOF is reached.
-// This is why the print statements don't appear until you
-// input \n.
-
 
 /* reverse polish calculator */
 int main()
 {
 	int type;
 	double op2;
-	double temp_val;
-	int found_var;
-	char temp_var = 0;
+	double pop_holder;
+	int var_assigned = FALSE;
+	int temp_var = -1;
+	int position = -1; // added to track the position of each value in formula
+	int var_pos = -1; // added to track position where var name was given
 	char s[MAXOP];
 
 	while ((type = getop(s)) != EOF) {
+		position++; // track position in formula
 		switch (type) {
 		case NUMBER_ID:
 			push(atof(s));
@@ -78,17 +61,26 @@ int main()
 			}
 			break;
 		case VAR_ID:
-			found_var = find_val_in_array(s[0], var_name);
-			if (found_var == -1)
-				temp_var = s[0];
-			else
-				push(get_var(found_var));
+			temp_var = s[0]; // hold var name to use if = follows 
+			if (is_var_set(temp_var, var_set)); { 
+				push(get_var(temp_var)); // Pushes the found var
+				// Track the var name position for removing the pushed var if assigned
+				if (position == 0)
+					var_pos = 0;
+				else if (position == 1)
+					var_pos = 1;
+			}
 			break;
 		case '=':
-			if (temp_var == 0)
-				printf("No var_name to assign value to");
-			else
-				put_var(temp_var, pop());
+			if (temp_var == 0) {
+				printf("\n/Error - No variable to assign.\n");
+			}
+			if (var_pos == 1)
+				pop(); // delete the pushed found_var
+			put_var(temp_var, pop());
+			if (var_pos == 0)
+				pop(); // delete the pushed found_var
+			var_assigned = TRUE; // Skip printing value on \n case
 			break;
 		case '+':
 			push(pop() + pop());
@@ -127,7 +119,16 @@ int main()
 			clearstack();
 			break;
 		case '\n':
-			printf("\t%.8g\n", pop());
+			if (var_assigned == FALSE) {
+				pop_holder = pop();
+				put_var('z', pop_holder); // Save printed value
+				printf("\t%.8g\n", pop_holder);
+			} else {
+				var_assigned = FALSE;
+			}
+			temp_var = -1;	// reset to default value
+			var_pos = -1;	// reset to default value
+			position = -1;	// reset to default value
 			break;
 		default:
 			printf("error: unknown command %s\n", s);
@@ -150,11 +151,9 @@ void push(double f)
 		printf("error: stack full, can't push %g\n", f);
 }
 
-/* pop: po and return top value from stack */
+/* pop: pop and return top value from stack */
 double pop(void)
 {
-	double temp_val;
-
 	if (sp > 0) {
 		return val[--sp];
 	} else {
@@ -162,8 +161,6 @@ double pop(void)
 		return 0.0;
 	}
 }
-
-#include <math.h>
 
 /* perform the math function provided */
 double perform_function(char s[], double op1, double op2)
@@ -177,79 +174,65 @@ double perform_function(char s[], double op1, double op2)
 	}
 }
 
-// The below functions getop(), getch(), ungetch() all get the user input:
-#include <ctype.h>
-
-int getch(void);
-void ungetch(int);
 
 /* getop: get next operator or numeric operand */
 int getop(char s[])
 {
-	int i, c, neg, temp;
+	int i, neg, temp;
+	static int p, len;
+	char line[MAXVAL];
 
-	i = 0; // Not initializing this was a bad bug
+	if (p == len) {
+		len = get_line(line);
+		if (!len)
+			return EOF;
+		p = 0;
+	}
 
-	while ((s[0] = c = getch()) == ' ' || c == '\t') { // Remove whitespace
-		;
-	}
-	s[1] = '\0'; 	// Required to make the single char a string
-	if (isalpha(c)) {
-		if (isalpha(temp = getch())) { // for perform_function()
-			s[++i] = temp;
-			while (isalpha(c = getch())) {
-				s[++i] = c;
-			}
-			ungetch(c);
-			s[++i] = '\0';
-			return FUNCTION_ID;
-		} else if (temp == ' ' ) { 	/* for get_var() */
-			return VAR_ID;
-		} else {			/* ERROR Handling */
-			ungetch(temp);
-			s[0] = '\0';
-			//return s;	// Not sure what to return on ERRORs
-		}
-	}
-	if (!isdigit(c) && c != '.' && c != '-')
-		return c;	/* not a number */
 	i = 0;
-	// Need to return only '-' if it isn't followed by a digit
-	if (c == '-')
-		if (!isdigit(c = getch())) {
-			ungetch(c);
-			return '-';
-		} else {
-			s[++i] = c;
+	while (line[p] == ' ' || line[p] == '\t') // Remove whitespace
+			p++;
+	
+	if (line[p] == '-' && isdigit(line[p + 1]))
+		s[i++] = line [p++];
+
+	if (isalpha(line[p])) {
+		while (isalpha(line[p]))
+			s[i++] = line[p++];
+		s[i++] = '\0';
+		if (strlen(s) == 1)
+			return VAR_ID;
+		else
+			return FUNCTION_ID;
+	}
+	if (!isdigit(line[p]) && line[p] != '.') {
+		return line[p++];	/* not a number */
+	}
+	if (isdigit(line[p]))	 {	/* collect integer part */
+		while (isdigit(line[p]))
+			s[i++] = line[p++];
+	}
+	if (line[p] == '.') {		/* collect fraction part */
+		s[i++] = line[p++]; // Have to move to the next char to get past the .
+		while (isdigit(line[p])) {
+			s[i++] = line[p++];
 		}
-	if (isdigit(c))		/* collect integer part */
-		while (isdigit(s[++i] = c = getch()))
-			;
-	if (c == '.')		/* collect fraction part */
-		while (isdigit(s[++i] = c = getch()))
-			;
+	}
 	s[i] = '\0';
-	if (c != EOF)
-		ungetch(c);
 	return NUMBER_ID;
 }
 
-#define BUFSIZE 100
-
-char buf[BUFSIZE]; 	/* buffer for ungetch */
-int bufp = 0;		/* next free position in buf */
-
-int getch(void)		/* get a (possibly pushed back) character */
+int get_line(char line[])
 {
-	return (bufp > 0) ? buf[--bufp] : getchar();
-}
-
-void ungetch(int c)	/* push character back on input */
-{
-	if (bufp >= BUFSIZE)
-		printf("ungetch: too many characters\n");
-	else
-		buf[bufp++] = c;
+	int i, c;
+	i = 0;
+	while ((c = getchar()) != '\n' && c != EOF){
+		line[i++] = c;
+	}
+	if (c == '\n')
+		line[i++] = c;
+	line[i] = '\0';
+	return i;
 }
 
 // All the below functionw work with the val array:
@@ -275,19 +258,13 @@ void swapchs(void)	/* # = swap top two chars in array. */
 
 void clearstack(void)	/* ! = clear the stack */
 {
-	// Don't think buffer needs cleared
 	val[0] = '\0';
 }
 
-void put_var(char c, double value)
+void put_var(int i, double value)
 {
-	int n = find_val_in_array(c, var_name);
-	if (n == -1) {
-		var_name[var_pos] = c;
-		var_value[var_pos++] = value;
-	} else {
-		var_value[n] = value;
-	}
+	var_set[i] = 1;
+	var_value[i] = value;
 }
 
 double get_var(int i)
@@ -295,13 +272,11 @@ double get_var(int i)
 	return var_value[i];
 }
 
-int find_val_in_array(char c, char array[])
+int is_var_set(int i, int array[])
 {
-	for (int i = 0; i <= var_pos; i++) {
-		if (array[i] == c)
-			return i;
-	}
-	return -1;
+	if (array[i] != 0)
+		return TRUE;
+	return FALSE;
 }
 
 void printArray(double array[])
@@ -314,3 +289,4 @@ void printArray(double array[])
 	}
 	printf("}");
 }
+
