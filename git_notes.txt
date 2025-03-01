@@ -14,3 +14,11 @@ git diff - shows changed between working directory and staging area.
 
 git diff --staged - Shows chages between what you staged to what was in last commit (current remote repo)
 	--cached - Same flag as --staged
+
+git commit - Opens commit message
+
+git commit -v - Puts the diff of our changes into the editor when adding commit message
+
+git commit -a - Stages all modified files before committing, but it doesn't add untracked files.
+
+git commit -m "commit messge"- Add the commit message as an argument
