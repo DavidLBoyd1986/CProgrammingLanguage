@@ -1,0 +1,16 @@
+git status - Shows status of files in current repo:
+	- not tracked
+	- unmodified
+	- modified
+	- staged
+
+git status -s  - Shows status in short format
+	- Left column is Staged area, Right column is working tree
+
+git diff - shows changed between working directory and staging area.
+	- i.e. shows diff for unstaged changes. Changed working directory, and compares to staging area
+
+	- If you staged all your changes, this will show nothing
+
+git diff --staged - Shows chages between what you staged to what was in last commit (current remote repo)
+	--cached - Same flag as --staged
