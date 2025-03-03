@@ -1,3 +1,29 @@
+						it Notes
+
+Overview:
+
+This will be a simple list of important git commands I learned reading pro-git.
+
+------------------------------------------
+
+git stage/commit commands:
+
+git commit -am "message"
+	- add all staged files, and put message inline
+
+git commit --amend
+	- allows you to update the previous commit
+	- adds all files in the staging area, and lets you add a new commit message
+	- only works on local commits that haven't been pushed anywhere
+	- entirely replaces the last local commit
+
+git restore --staged <file>
+	- unstages a staged file
+
+git restore <file>
+	- discard changes to a modified (unstaged) file
+	- permanently lose all changes
+
 git status - Shows status of files in current repo:
 	- not tracked
 	- unmodified
@@ -7,6 +33,27 @@ git status - Shows status of files in current repo:
 git status -s  - Shows status in short format
 	- Left column is Staged area, Right column is working tree
 
+git add <file> - Stage the new/modified file so it is included in next commit
+
+git rm <file> - Stage a deleted file, so it is removed from the next commit
+
+git rm -f <file> - If the file was modified or staged, the -f is required to remove it
+
+git rm --cached <file> - Remove file from your staging area, but doesn't delete the file from the working tree.
+
+- The '\' is required in front of the wildcare '*' because git does its own filename expansion
+git rm log/\*.log
+git rm  \*~
+
+git mv <file-1> <file-2>
+
+	- Above is equivalent of: mv <file-1> <file-1> ; git rm <file-1> ; git add <file-2>
+	- There is literally no other benefit to 'git mv' it is just shorthand for the 3 commands above.
+----------------------------------------
+	
+git diff:
+
+
 git diff - shows changed between working directory and staging area.
 	- i.e. shows diff for unstaged changes. Changed working directory, and compares to staging area
 
@@ -15,6 +62,13 @@ git diff - shows changed between working directory and staging area.
 git diff --staged - Shows chages between what you staged to what was in last commit (current remote repo)
 	--cached - Same flag as --staged
 
+-----------------------------------------
+
+git commit:
+
+
+- git commits are snapshots of your project, that you can revert to, and even compare snapshots
+
 git commit - Opens commit message
 
 git commit -v - Puts the diff of our changes into the editor when adding commit message
@@ -22,3 +76,55 @@ git commit -v - Puts the diff of our changes into the editor when adding commit 
 git commit -a - Stages all modified files before committing, but it doesn't add untracked files.
 
 git commit -m "commit messge"- Add the commit message as an argument
+
+-----------------------------------------
+
+git log:
+
+
+git log - show the commit history
+
+git log -p -2
+
+	-p - show the diff of each commit
+
+	-2 - show only the last two entries
+
+	--stat - gives abbreviated stats for each commit
+
+	--pretty=oneline , --pretty=short/full/fuller
+
+git log --pretty=format:"%h - %an, %ar : %s"
+
+	- Prints git log 'commits' in a specific format.
+	- Look up all the "git log --pretty=format" specifiers
+	- there are 'abbreviated commit hash', 'Author name', 'Author date', 'Subject'
+
+git log --pretty=format:"%h %s" --graph
+
+	--graph shows your branch and merge history
+
+git log --since=2.weeks / 2.days / 2025-1-15 / --after is same
+	--until / --before
+
+git log --author=Linus	- only shows commits where author name contains 'Linus'
+
+	--grep="pattern" - Search the entire commit for a value
+
+	- Can include multiple --author and --grep.
+
+	--all-match - requires all of the --author and --grep match
+
+git log -S "print_array" - Show commits where diff changes the amount of a "string"
+	- Useful for finding new uses of function calls.
+
+git log -- path/to/file
+	- Always the last option
+	- Only show commits that made changes to "path/to/file"
+
+	--no-merges - hides merge commits. IMPORTANT
+
+
+NOTE - Author originally wrote the code, and Committer is the core team member who applied the patch
+
+-----------------------------------------
