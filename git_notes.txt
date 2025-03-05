@@ -200,3 +200,6 @@ misc git commands:
 
 git show <object>
 	<object> can be - remote, branch, tag, etc..
+
+git switch -c <newbranchname>
+	how to get out of detached head state
