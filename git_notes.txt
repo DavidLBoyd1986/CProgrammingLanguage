@@ -1,12 +1,23 @@
-						it Notes
+				Git Notes
 
 Overview:
 
 This will be a simple list of important git commands I learned reading pro-git.
 
-------------------------------------------
+
+-------------------------------------------------------------------
 
 git stage/commit commands:
+-------------------------
+- git commits are snapshots of your project, that you can revert to, and even compare snapshots
+
+git commit - Opens commit message
+
+git commit -v - Puts the diff of our changes into the editor when adding commit message
+
+git commit -a - Stages all modified files before committing, but it doesn't add untracked files.
+
+git commit -m "commit messge"- Add the commit message as an argument
 
 git commit -am "message"
 	- add all staged files, and put message inline
@@ -49,10 +60,10 @@ git mv <file-1> <file-2>
 
 	- Above is equivalent of: mv <file-1> <file-1> ; git rm <file-1> ; git add <file-2>
 	- There is literally no other benefit to 'git mv' it is just shorthand for the 3 commands above.
-----------------------------------------
+----------------------------------------------------------------
 	
-git diff:
-
+git diff commands:
+-----------------
 
 git diff - shows changed between working directory and staging area.
 	- i.e. shows diff for unstaged changes. Changed working directory, and compares to staging area
@@ -62,25 +73,10 @@ git diff - shows changed between working directory and staging area.
 git diff --staged - Shows chages between what you staged to what was in last commit (current remote repo)
 	--cached - Same flag as --staged
 
------------------------------------------
+-----------------------------------------------------------------
 
-git commit:
-
-
-- git commits are snapshots of your project, that you can revert to, and even compare snapshots
-
-git commit - Opens commit message
-
-git commit -v - Puts the diff of our changes into the editor when adding commit message
-
-git commit -a - Stages all modified files before committing, but it doesn't add untracked files.
-
-git commit -m "commit messge"- Add the commit message as an argument
-
------------------------------------------
-
-git log:
-
+git log commands:
+----------------
 
 git log - show the commit history
 
@@ -127,4 +123,80 @@ git log -- path/to/file
 
 NOTE - Author originally wrote the code, and Committer is the core team member who applied the patch
 
------------------------------------------
+------------------------------------------------------------------
+
+git remote commands:
+-------------------
+
+git remote - shows remote repositories configured
+
+	-v - shows URL and other data about remote repos
+	
+git remote <repo>
+
+git remote show <remote>
+
+git remote add <shortname> <url>
+	- add a remote repo as <shortname>, with the remote repo <url>
+
+git remote rename <current-repo-name> <new-repo-name>
+
+git remote remove <repo-name>
+
+git fetch - pulls data from the remote repository
+	- Doesn't automatically merge data, have to merge manually
+
+git fetch <repo>
+
+git pull - pulls data from the remote repository
+	- Does automatically merge data
+
+git pull <repo>
+
+git push <repo> <branch> - Pushes commits to local <branch> to remote <repo>
+	- just 'git push' will push checked out branch to configured remote repo
+
+-----------------------------------------------------------------
+
+git tag commands:
+-----------------
+
+git tag - list all tag
+
+git tag -l "v1.8.5*" - list tags that match a specific pattern
+
+	-l - lists tags, only required if using a pattern
+
+git tag -a <tag-name> -m <tag-message>
+	git tag -a v4.0.0 -m "This is version 4.0.0?
+	-a - Creates an Annotated Tag, which is stored as a full object.
+
+git tag <tag-name>
+	Creates a light-weight tag, only a pointer to a commit checksum, no other data like annotated tags
+
+git push origin <tag>
+git push <remote> <tag>
+	Tags are not pushed automatically, but need pushed explicitly.
+
+git push origin --tags
+	Push all tags to the remote
+
+git tag -d <tag>
+	Delete a tag locally
+
+git push <remote> :refs/tags/<tagname>
+git push origin :refs/tags/v4.0.0
+	Delete tags on a remote repo
+
+git push origin --delete <tag>
+	The normal way to delete a tag on the remote server
+
+git checkout <tag>
+	Checkouts the files related to a Tag
+-----------------------------------------------------------------
+
+misc git commands:
+-----------------
+
+git show <object>
+	<object> can be - remote, branch, tag, etc..
