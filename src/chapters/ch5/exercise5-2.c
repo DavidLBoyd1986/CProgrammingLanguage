@@ -5,14 +5,16 @@
 
 int getch(void);
 void ungetch(int);
-int getint(int *);
-void print_array(int array[], int len);
+float getfloat(float *);
+void print_array(float array[], int len);
 
 int main()
 {
-	int n, array[SIZE], getint(int *);
+	int n;
+	float array[SIZE], getfloat(float *);
+
 	printf("\nIn main before loop\n");
-	for (n = 0; n < SIZE && getint(&array[n]) != EOF; n++)
+	for (n = 0; n < SIZE && getfloat(&array[n]) != EOF; n++)
 		;
 	printf("\nIn main after loop\n");
 	int l = sizeof(array) / sizeof(array[0]);
@@ -20,9 +22,10 @@ int main()
 }
 
 /* getint; get next integer from input into *pn */
-int getint(int *pn)
+float getfloat(float *pn)
 {
-	int c, sign;
+	int sign;
+	float c;
 
 	while (isspace(c = getch())) /* skip white space */
 		;
@@ -34,7 +37,6 @@ int getint(int *pn)
 	if (c == '+' || c == '-') {
 		c = getch();
 		if (!isdigit(c))
-			*pn = 0;
 			return 0;
 	}
 	for (*pn = 0; isdigit(c); c = getch())
@@ -63,13 +65,13 @@ void ungetch(int c)
 		buf[bufp++] = c;
 }
 
-void print_array(int array[], int len)
+void print_array(float array[], int len)
 {
 	int i = 0;
 	printf("\n{");
 	while (i < len-1) {
-		printf("%i, ", array[i]);
+		printf("%f, ", array[i]);
 		i++;
 	}
-	printf("%i}\n\n", array[i]);
+	printf("%f}\n\n", array[i]);
 }

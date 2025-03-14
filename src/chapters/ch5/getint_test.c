@@ -5,7 +5,7 @@
 
 int getch(void);
 void ungetch(int);
-int getint(int *);
+int getint(int *pn);
 void print_array(int array[], int len);
 
 int main()
@@ -22,7 +22,7 @@ int main()
 /* getint; get next integer from input into *pn */
 int getint(int *pn)
 {
-	int c, sign;
+	int c, temp, sign;
 
 	while (isspace(c = getch())) /* skip white space */
 		;
@@ -33,9 +33,6 @@ int getint(int *pn)
 	sign = (c == '-') ? -1 : 1;
 	if (c == '+' || c == '-') {
 		c = getch();
-		if (!isdigit(c))
-			*pn = 0;
-			return 0;
 	}
 	for (*pn = 0; isdigit(c); c = getch())
 		*pn = 10 * *pn + (c - '0');
@@ -47,7 +44,7 @@ int getint(int *pn)
 
 #define BUFSIZE 100
 
-int buf[BUFSIZE];
+char buf[BUFSIZE];
 int bufp = 0;
 
 int getch()
