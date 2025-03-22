@@ -60,8 +60,66 @@ git mv <file-1> <file-2>
 
 	- Above is equivalent of: mv <file-1> <file-1> ; git rm <file-1> ; git add <file-2>
 	- There is literally no other benefit to 'git mv' it is just shorthand for the 3 commands above.
-----------------------------------------------------------------
+-----------------------------------------------------------------
 	
+git branching commands:
+-----------------
+
+git branch -a - Show all branches, even remote branches
+
+git branch <new-branch>
+
+git branch <old-branch> <new-branch>
+
+git branch - show branches, same as -l
+
+git branch --merged - show merged branches
+
+git branch --no-merged - show branches that haven't been merged
+
+git branch --move <old-branch-name> <new-branch-name>
+
+git checkout -b <new-branch>
+
+git switch -c <new-branch>
+	how to get out of detached head state
+
+git merge <branch> - Merges <branch> into current branch
+
+git merge origin/remote-branch - This will merge remote branches into you local branch
+
+
+Merge Types:
+
+- fast-forward - Merges that are 'fast-forwards' are when the merged branch is in front of current branch
+	- This merge merely moves the pointer of main/master forward, to the merged branch
+
+	-Ex: *-*-*-*-*
+
+- merge-commits - Merges that merges a divergent branch, into a master that has new commits.
+	- Uses the Common ancestor of the commits, where the branch diverged, and....
+	- The snapshot of the current branch and branch being merged.
+	- Makes a whole new commit, where as 'fast-forward' does not make a new commit
+	
+	- Ex: *-*-*-*         *-*-*-*-*
+		 \               \   /
+		  *-*		  *-*
+
+- merge-conflicts - If merging branches that both have commited changes to the same file,
+	- the merge conflict must be resolved before the commit can be completed.
+	- 'git status' will indicate the files that have merge conflicts
+	- open the file two see the two different versions, one on top, other below the '======'
+	- Make the necessary changes to the file, and save it, to merge the commits
+
+	- NOTE - There should be other ways to view the merge-conflicted files, such as diff.
+		- git mergetool - enter name of tool you want to use to resolve merge conflict
+
+	- Once all the merge-conflicted files are resolved, to finish the commit, run:
+		- 'git add <file>'
+		- 'git commit'
+		- It will automatically add a line about resolving the merge commit.
+
+-----------------------------------------------------------------
 git diff commands:
 -----------------
 
@@ -79,6 +137,16 @@ git log commands:
 ----------------
 
 git log - show the commit history
+
+git log <branch> - show the commit history for a branch you aren't on
+
+git log --all - show entire commit history
+
+	--NOTE - git log only shows commit history up to the branch you are on.
+		 It doesn't show commits not part of your current branch.
+
+git log --oneline --decorate --graph --all
+	- show how branches have diverged
 
 git log -p -2
 
@@ -146,7 +214,15 @@ git remote remove <repo-name>
 git fetch - pulls data from the remote repository
 	- Doesn't automatically merge data, have to merge manually
 
-git fetch <repo>
+git fetch <remote-repo>
+
+IMPORTANT - Fetching won't create local copies of the branches:
+	- It will create 'remote/branch'
+	- To create local copies run the command below
+	- Run 'git branch -a' to see remote branches
+
+git checkout -b <local-branch> <origin/remote-branch>
+	- create a local branch from a fetched remote branch
 
 git pull - pulls data from the remote repository
 	- Does automatically merge data
@@ -154,7 +230,23 @@ git pull - pulls data from the remote repository
 git pull <repo>
 
 git push <repo> <branch> - Pushes commits to local <branch> to remote <repo>
+
+	git push origin test-branch
+
 	- just 'git push' will push checked out branch to configured remote repo
+
+git push origin local-branch:remote-branch
+	- This will push a local branch to a different remote branch
+
+git push --set-upstream origin <new-branch> - push a new branch to remote
+
+git push origin --delete <old-branch> - delete a branch
+
+IMPORTANT - origin isn't a special remote name, it can be named anything.
+
+git clone <remote-repo-url>
+
+git clone <remote-repo-url> -o <name> - Changes remote name from origin
 
 -----------------------------------------------------------------
 
@@ -201,5 +293,4 @@ misc git commands:
 git show <object>
 	<object> can be - remote, branch, tag, etc..
 
-git switch -c <newbranchname>
-	how to get out of detached head state
+git config --global credential.helper cache - Couldn't get this to work

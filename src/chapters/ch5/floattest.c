@@ -12,6 +12,7 @@ printf("testfloatone = %f\n", testfloatone);
 printf("testfloattwo = %f\n", testfloattwo);
 printf("testfloatthree = %f\n", testfloatthree);
 
+// Create incrementer that will track position of decimal value
 float incrementer = .1;
 printf("incrementer: %f\n", incrementer);
 incrementer = incrementer * 4;
