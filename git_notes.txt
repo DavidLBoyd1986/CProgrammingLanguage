@@ -71,6 +71,8 @@ git branch <new-branch>
 
 git branch <old-branch> <new-branch>
 
+git branch -u <remote/branch> - set upstream branch
+
 git branch - show branches, same as -l
 
 git branch --merged - show merged branches
@@ -80,6 +82,11 @@ git branch --no-merged - show branches that haven't been merged
 git branch --move <old-branch-name> <new-branch-name>
 
 git checkout -b <new-branch>
+
+git checkout -b <new-branch> <remote/branch> - automatically sets up-stream branch
+
+git checkout --track <remote/branch>
+	- checkouts out a remote branch to edit locally
 
 git switch -c <new-branch>
 	how to get out of detached head state
