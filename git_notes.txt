@@ -305,6 +305,9 @@ git clone <remote-repo-url> -o <name> - Changes remote name from origin
 
 git clone <user>@<server>:/path/to/project.git
 	- Git clone using SSH
+
+git clone --bare <repo> <repo>.git
+	- Clones a project to a bare-repo, that has no working directory, only a .git file
 -----------------------------------------------------------------
 
 git tag commands:
