@@ -65,7 +65,12 @@ git mv <file-1> <file-2>
 git branching commands:
 -----------------
 
+git branch - show branches, same as -l
+
 git branch -a - Show all branches, even remote branches
+
+git branch -vv - show remote tracking branch and commit pointed to.
+	- Doesn't 'fetch' new data from remote
 
 git branch <new-branch>
 
@@ -73,7 +78,6 @@ git branch <old-branch> <new-branch>
 
 git branch -u <remote/branch> - set upstream branch
 
-git branch - show branches, same as -l
 
 git branch --merged - show merged branches
 
@@ -83,6 +87,7 @@ git branch --move <old-branch-name> <new-branch-name>
 
 git checkout -b <new-branch>
 
+git checkout -b <new-branch> <local-branch> - create branch off <local-branch>
 git checkout -b <new-branch> <remote/branch> - automatically sets up-stream branch
 
 git checkout --track <remote/branch>
@@ -95,6 +100,14 @@ git merge <branch> - Merges <branch> into current branch
 
 git merge origin/remote-branch - This will merge remote branches into you local branch
 
+git rebase master - rebase the current branch onto the master branch
+
+git rebase <base-branch> <topic-branch> - rebase <topic-branch> onto <base-branch>
+
+git rebase --onto master server client
+	- rebase 'client' a branch off 'server' onto 'master
+	- This will leave the 'server' branch alone, but is required since 'client' is branched off 'server'
+	- Since 'server' has commits 'client' contains, this is how to rebase 'client' onto master
 
 Merge Types:
 
@@ -125,6 +138,30 @@ Merge Types:
 		- 'git add <file>'
 		- 'git commit'
 		- It will automatically add a line about resolving the merge commit.
+
+Rebasing:
+
+To rebase, checkout the branch you want 'rebased' onto another branch
+
+For example, to rebase 'rb-branch' onto 'master':
+
+	git checkout rb-branch
+	git rebase master
+
+Rebasing takes all the commits from one branch, and applies them in order to the other branch
+Now you can 'git merge' and it does a fast-forward merge, and leaves a linear commit history.
+There is no divergence, as it deletes the rebased branch.
+
+Rebase vs Merging:
+
+The end result is the same for both, there is a new commit that combines both branches.
+Only the 'git history' and 'git log' is different.
+Merging can leave diverging branches, as merge commits will have two parents.
+Rebasing causes all merges to be fast-forwards, as it re-applies branching commits as a new linear commit.
+
+IMPORTANT - DO NOT REBASE COMMITS THAT EXIST OUTSIDE YOUR REPOSITORY!!!
+	- Other people may have work based off those commits.
+	- Rebasing will delete the commit, and cause serious issues
 
 -----------------------------------------------------------------
 git diff commands:
@@ -203,6 +240,8 @@ NOTE - Author originally wrote the code, and Committer is the core team member w
 git remote commands:
 -------------------
 
+@{u} and @{upstream} are shorthand for the remote tracking branch you are on
+
 git remote - shows remote repositories configured
 
 	-v - shows URL and other data about remote repos
@@ -218,10 +257,18 @@ git remote rename <current-repo-name> <new-repo-name>
 
 git remote remove <repo-name>
 
+IMPORTANT - 'git fetch' doesn't update checked out branch
+	- 'git pull' is actually 'git fetch; git merge' for the remote tracking branch
+	- So, it fetchs from the remote tracking branch, 
+	- and merges it into the current branch (working directory)
+	- 'git fetch; git merge' is the preferred method over 'git pull'
+
 git fetch - pulls data from the remote repository
 	- Doesn't automatically merge data, have to merge manually
 
 git fetch <remote-repo>
+
+git fetch --all
 
 IMPORTANT - Fetching won't create local copies of the branches:
 	- It will create 'remote/branch'
@@ -246,6 +293,7 @@ git push origin local-branch:remote-branch
 	- This will push a local branch to a different remote branch
 
 git push --set-upstream origin <new-branch> - push a new branch to remote
+	--set-upstream is same as -u
 
 git push origin --delete <old-branch> - delete a branch
 
@@ -255,6 +303,8 @@ git clone <remote-repo-url>
 
 git clone <remote-repo-url> -o <name> - Changes remote name from origin
 
+git clone <user>@<server>:/path/to/project.git
+	- Git clone using SSH
 -----------------------------------------------------------------
 
 git tag commands:
