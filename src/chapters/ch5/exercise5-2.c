@@ -26,6 +26,8 @@ float getfloat(float *pn)
 {
 	int sign;
 	float c;
+	float incrementer = .1;
+	float temp;
 
 	while (isspace(c = getch())) /* skip white space */
 		;
@@ -41,6 +43,13 @@ float getfloat(float *pn)
 	}
 	for (*pn = 0; isdigit(c); c = getch())
 		*pn = 10 * *pn + (c - '0');
+	if (c == '.')
+		c = getch();
+	while (isdigit(c)) {
+		*pn = *pn + (incrementer * (c - '0'));
+		incrementer *= .1;
+		c = getch();
+	}
 	*pn *= sign;
 	if (c != EOF)
 		ungetch(c);
