@@ -8,21 +8,22 @@ void update_array(int *pn);
 int main()
 {
 	int n;
-
 	int array[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+
 	printf("\nOrignal Array: ");
 	print_array(array, 10);
-	printf("\n");
+
 	for (n = 0; n < SIZE; n++)
 		array[n] = array[n] + 10;
+
 	printf("\nUpdated Array, without pointers: ");
 	print_array(array, 10);
-	printf("\n");
+
 	for (n = 0; n < SIZE; n++)
 		update_array(&array[n]);
+
 	printf("\nUpdated Array, without pointers: ");
 	print_array(array, 10);
-	printf("\n");
 }
 
 void update_array(int *pn)
