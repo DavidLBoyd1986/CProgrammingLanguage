@@ -1,0 +1,13 @@
+
+
+Arrays are just a pointer to the first element in the array. The type of an array variable is literally a pointer to type of data array is storing. 
+
+	For example an "int array[10]" is of type "int*" because the int array is just a pointer to the first array element, which is an int.
+
+Arrays are a continuous sequence of memory, and the later elements can be accessed by iterating through the array
+
+But, you don't have to iterate through the whole array, to get to later indexes. You can add to the pointer address to get to a later index.
+
+	For example, add (sizeof(element) * index to access) to the array pointer, to get the pointer to that array index.
+
+

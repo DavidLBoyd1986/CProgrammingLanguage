@@ -25,7 +25,8 @@ int main()
 	// Allocate heap memory for an array of a specific type
 	int *int_array = (int *)malloc(5 * sizeof(int));
 	float *float_array = (float *)malloc(10 * sizeof(float));
-	char *char_array = (char *)malloc(70 * sizeof(char));
+	// calloc is a clearer way to allocate pointers to arrays
+	char *char_array = (char *)calloc(70, sizeof(char));
 
 	int temp_num = 58;
 	float temp_float = 7.12;
@@ -55,6 +56,8 @@ int main()
 	char_array[70] = '\0';
 	printf("\nchar_array:");
 	printf("\nchar_array = %s\n", char_array);
+
+	return EXIT_SUCCESS
 }
 
 void print_int_array(int *int_ptr, int len)

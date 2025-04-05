@@ -1,0 +1,51 @@
+Opening Files:
+
+fopen() - open files in different modes
+
+r - read, only reads the file
+	Fails if file doesn't exist
+
+w - write, opens the file in write mode, clears all data in file
+	Creates file if it doesn't exist
+
+a - append, opens the file in write mode, but does not clear out all the data
+	Creates file if it doesn't exist
+
+r+ - read and write.
+	Fails if file doesn't exist
+	Appends writes after existing data ('r' 'r'espects existing data)
+
+w+ - read and write.
+	Creates file if it doesn't exist
+	Overwrites the existing data ('w' existing data is 'w'rong)
+	Old contents are lost the moment you open the file in w+ mode
+
+a+ - read and write. (Course said it can't read, but they were wrong)
+	Creates file if it doesn't exist
+	Appends writes after existing data
+
+Character reading:
+
+fgetc() - read characters from a file
+fputc() - write characters to a file
+
+Structured Data:
+
+fscanf() - read structured data from a file
+fprintf() - write structured data to a file
+
+Strings:
+
+fgets() - to read strings from files
+fputs() - write strings to files
+
+Binary Data:
+
+fread() - to read binary data from files
+fwrite() - to write binary data into files
+
+File positions operations:
+
+ftell() - returns the current position of the file pointer
+fseek() - sets the file pointer to the given position
+rewind() - sets the file pointer to the beginning of the file
