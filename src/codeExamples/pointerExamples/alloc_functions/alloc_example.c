@@ -20,6 +20,8 @@ int main()
 	printf("\ntest3 address = %p\n", test3);
 	char *test4 = alloc(15);
 	printf("\ntest4 address = %p\n", test4);
+	printf("\nallocbuf = %p\n", allocbuf);
+	printf("allocbuf = %p\n", allocbuf + ALLOCSIZE);
 }
 
 char *alloc(int n) 	/* return pointer to n characters */
