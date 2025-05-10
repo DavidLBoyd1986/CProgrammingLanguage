@@ -32,10 +32,37 @@ int main()
 	// Below doesn't work. Why doesn't it work when passing in char* but does with char[].
 	//printf("return value of strncpy_new(string4, string5, 4) = %s\n", strncpy_new(string4, string5, 4));
 
-	printf("\nstring4 before strncpy = %s\n", string6);
-	printf("string5 before strncpy = %s\n", string7);
+	printf("\nstring6 before strncpy = %s\n", string6);
+	printf("string7 before strncpy = %s\n", string7);
 	printf("return value of strncpy_new(string6, string7, 8) = %s\n", strncpy_new(string6, string7, 8));
 
+	printf("------------------------------------------------");
+
+	char str1[100] = "test_string_one";
+	char str2[100] = "start";
+	char *str3;
+	char *str4 = "test_string_one";
+	char *str5 = "start";
+	char blankstr[100];
+	char str6[100] = "test_string_one";
+	char str7[100] = "start";
+
+	printf("\nstr1 before strncat = %s\n", str1);
+	printf("str2 before strncat = %s\n", str2);
+	str3 = strncat_new(str1, str2, 4);
+	printf("str3 after strncat(str1, str2, 4) = %s\n", str3);
+
+	// Below shows you can pass a "char []" into a function parameter for "char *"
+	printf("return value of strncat(blankstr, str2, 3) = %s\n", strncat_new(blankstr, str2, 3));
+
+	printf("\nstr4 before strncat = %s\n", str4);
+	printf("str5 before strncat = %s\n", str5);
+	// Below doesn't work. Why doesn't it work when passing in char* but does with char[].
+	//printf("return value of strncat_new(str4, str5, 4) = %s\n", strncat_new(str4, str5, 4));
+
+	printf("\nstr6 before strncat = %s\n", str6);
+	printf("str7 before strncat = %s\n", str7);
+	printf("return value of strncat_new(str6, str7, 8) = %s\n", strncat_new(str6, str7, 8));
 	return 0;
 }
 
@@ -51,5 +78,17 @@ char* strncpy_new(char *s, char *t, int n)
 		}
 		*s++ = *t++;
 	}
+	return s_start;
+}
+
+char* strncat_new(char *s, char *t, int n)
+{
+	char *s_start = s;
+
+	while (*s != '\0')
+		s++;
+	while (*t != '\0')
+		*s++ = *t++;
+	*s = '\0';
 	return s_start;
 }
