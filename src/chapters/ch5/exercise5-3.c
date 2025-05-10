@@ -15,15 +15,12 @@ int main()
 void strcatpntr(char *s, char *t)
 {
 	int c;
-	int s_pos = 0;
-	int t_pos = 0;
 
-	while ((c = s[s_pos]) != '\0') {
-		s_pos++; // Get to end of s
+	while ((*s) != '\0') {
+		*s++; // Get to end of s
 	}
-	while ((c = t[t_pos]) != '\0') {
-		s[s_pos++] = c;
-		t_pos++;
+	while ((*t) != '\0') {
+		*s++ = *t++;
 	}
-	s[s_pos] = '\0';
+	*s = '\0';
 }

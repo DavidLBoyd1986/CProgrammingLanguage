@@ -16,31 +16,29 @@ int main()
 	match = strend(string_1, string_2);
 	printf("\ntest_one match = %i\n\n", match);
 	match = strend(string_1, string_3);
-	printf("\ntest_two match = %i\n\n", match);
+	printf("test_two match = %i\n\n", match);
 	match = strend(string_1, string_4);
-	printf("\ntest_three match = %i\n\n", match);
+	printf("test_three match = %i\n\n", match);
 	match = strend(string_1, string_5);
-	printf("\ntest_four match = %i\n\n", match);
+	printf("test_four match = %i\n\n", match);
 	match = strend(string_1, string_6);
-	printf("\ntest_five match = %i\n\n", match);
+	printf("test_five match = %i\n\n", match);
 	match = strend(string_1, string_7);
-	printf("\ntest_six match = %i\n\n", match);
+	printf("test_six match = %i\n\n", match);
 }
 
 int strend(char *s, char *t)
 {
 	int c;
-	int s_pos = 0;
-	int t_pos = 0;
-
-	while ((c = s[s_pos++]) != '\0') {
-		if (c != t[t_pos++]) {
-			t_pos = 0;
+	char *t_start = t;
+	while ((*s) != '\0') {
+		if (*s++ != *t++) {
+			t = t_start;
 			continue;
 		}
 	}
 
-	if (t_pos > 0 && t[t_pos] == '\0')
+	if (t > t_start && *t == '\0')
 		return 1;
 	else
 		return 0;
