@@ -63,9 +63,32 @@ int main()
 	printf("\nstr6 before strncat = %s\n", str6);
 	printf("str7 before strncat = %s\n", str7);
 	printf("return value of strncat_new(str6, str7, 8) = %s\n", strncat_new(str6, str7, 8));
+
+	printf("------------------------------------------------");
+
+	char st1[100] = "test_string_one";
+	char st2[100] = "test_string_two";
+	char *st3 = "test_string_one";
+	char *st4 = "test_string_two";
+	char st5[100] = "test_string_one";
+	char st6[100] = "test";
+	char blankst[100];
+
+	printf("\nst1 before strncmp = %s\n", st1);
+	printf("st2 before strncmp = %s\n", st2);
+	int ans1 = strncmp_new(st1, st2, 9);
+	printf("Comparison result of strncmp_new(st1, st2, 9) = %i\n", ans1);
+
+	printf("\nst3 before strncmp = %s\n", st3);
+	printf("st4 before strncmp = %s\n", st4);
+	// Below doesn't work. Why doesn't it work when passing in char* but does with char[].
+	//printf("return value of strncmp_new(str3, str4, 9) = %s\n", strncmp_new(str3, str4, 9));
+
+	printf("\nst5 before strncmp = %s\n", st5);
+	printf("st6 before strncmp = %s\n", st6);
+	printf("return value of strncmp_new(st5, st6, 4) = %i\n", strncmp_new(st5, st6, 4));
 	return 0;
 }
-
 
 char* strncpy_new(char *s, char *t, int n)
 {
@@ -92,3 +115,27 @@ char* strncat_new(char *s, char *t, int n)
 	*s = '\0';
 	return s_start;
 }
+
+int strncmp_new(char *s, char *t, int n)
+{
+	int i = 0;
+
+	while (*s != '\0' && *t != '\0' && i < n) {
+		if (*s == *t) {
+			s++;
+			t++;
+			continue;
+		} else {
+			return (*s - *t);
+		}	
+	}
+
+	// Return values based on reach end of string
+	if (*s == '\0' && *t == '\0')
+		return 0;
+	if (*s == '\0')
+		return -1;
+	if (*t == '0')
+		return 1;
+}
+
