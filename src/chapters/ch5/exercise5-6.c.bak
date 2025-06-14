@@ -1,10 +1,11 @@
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
+#include <stdlib.h>
 
 int get_line(char *, int);
-int atoi(char *);
-char* itoa(int);
+int tatoi(char *);
+char* titoa(int);
 char* reverse(char *);
 int strindex(char *, char *);
 int getop(char *);
@@ -28,8 +29,16 @@ int main()
 	// Test atoi()
 	char *atoi_test_1 = "394";
 	printf("atoi_test_1 = %s\n", atoi_test_1);
-	int atoi_result_1 = atoi(atoi_test_1);
+	int atoi_result_1 = tatoi(atoi_test_1);
 	printf("atoi_result_1 = %i\n", atoi_result_1);
+	char *atoi_test_2 = "-438923";
+	printf("atoi_test_2 = %s\n", atoi_test_2);
+	int atoi_result_2 = tatoi(atoi_test_2);
+	printf("atoi_result_2 = %i\n", atoi_result_2);
+	int itoa_test_1 = 394;
+	printf("itoa_test_1 = %i\n", itoa_test_1);
+	char *itoa_result_1 = titoa(itoa_test_1);
+	printf("itoa_result_1 = %s\n", itoa_result_1);
 }
 
 int get_line(char *s, int limit)
@@ -58,36 +67,70 @@ int expo(int base, int exp)
 	return total;
 }
 
-int atoi(char *s)
+int tatoi(char *s)
 {
-	char *temp_s = &*s;
 	int c;
 	int len = 0;
+	int sign = 0;
+	int final_val = 0;
 
-	int test_exponent = expo(10, 3);
-	printf("test_exponent = %i\n", test_exponent);
-	printf("temp_s = %s\n", temp_s);
+	// Save sign
+	if ((c = *s)  == '-') {
+		sign = '-';
+		s++;
+	}
+	char *temp_s = s; //Copy the string pointer before getting length
+	// Get length of s
 	while ((c = *s) != '\0') {
-		*s++;
+		s++;
 		len++;
 	}
-	int final_val = 0;
-	int pos;
 	len = len - 2;
+	// Turn string into an int in final val
 	while (len >= 0) {
-		c = *temp_s;
-		printf("c char in loop = %c\n", c);
-		printf("c int in loop = %i\n", c);
-		printf("len is %i\n", len);
-		pos = expo(10, len);
-		printf("pos is %i\n", pos);
-		final_val = final_val + ((c - 48) * pos);
-		printf("final_val is %i\n", final_val);
-		*temp_s++;
+		c = *temp_s++;
+		final_val = final_val + ((c - 48) * expo(10, len));
 		len--;
 	}
 	c = *temp_s;
 	final_val = final_val + (c - 48);
+	// Add sign back in
+	if (sign == '-')
+		final_val *= -1;
+
 	return final_val;
 }
 
+char* titoa(int n)
+{
+	char return_string[20];
+	char *s = return_string;
+	int p;
+	char c;
+	int len = 0;
+
+	while ((p = n % 10) > 0) {
+		c = p + 48;
+		*s++ = c;
+		len++;
+		n /= 10;
+		//printf("n = %i\n", n);
+		//printf("c = %c\n", c);
+		//printf("*s = %c\n", *s);
+	}
+	*s = '\0';
+	printf("return_string = %s\n", return_string);
+	char *final_s;
+	char swap;
+	for (int f = 0, b = len; f < b-1; f++, b--) {
+		swap = *(return_string + f);
+		printf("swap = %c\n", swap);
+		*(return_string + f) = *(return_string + b);
+		*(return_string + b) = swap;
+		//*final_s++ = *--s;
+	}
+	*(return_string + len) = '\0';
+	printf("return_string = %s\n", return_string);
+	//printf("final_s = %s\n", final_s);
+	return return_string;
+}
