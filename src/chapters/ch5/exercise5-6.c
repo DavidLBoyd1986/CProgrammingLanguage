@@ -40,6 +40,7 @@ int main()
 	printf("itoa_test_1 = %i\n", itoa_test_1);
 	char *itoa_result_1 = titoa(itoa_test_1);
 	printf("itoa_result_1 = %s\n", itoa_result_1);
+	//printf("expo test expo(10, 2) = %i\n", 394 % (expo(10, 2)));
 	int itoa_test_2 = 394;
 	printf("itoa_test_2 = %i\n", itoa_test_2);
 	char *itoa_result_2 = titoa_test(itoa_test_2);
@@ -64,8 +65,7 @@ int get_line(char *s, int limit)
 int expo(int base, int exp)
 {
 	int total = base;
-
-	while (exp > 0) {
+	while (exp > 1) {
 		total = total * base;
 		exp--;
 	}
@@ -94,7 +94,7 @@ int tatoi(char *s)
 	// Turn string into an int in final val
 	while (len >= 0) {
 		c = *temp_s++;
-		final_val = final_val + ((c - 48) * expo(10, len));
+		final_val = final_val + ((c - 48) * expo(10, len+1));
 		len--;
 	}
 	c = *temp_s;
@@ -145,10 +145,10 @@ char* titoa(int n)
 char* titoa_test(int n)
 {
 	int int_val = n;
+	int temp_int = n;
 	char string_val[20];
 	char *s_start = string_val;
 	char *s = string_val;
-	int temp_int;
 	int len = 0;
 
 	// Get length of string
@@ -159,14 +159,15 @@ char* titoa_test(int n)
 	printf("len = %i\n", len);
 	// Copy each int into a string
 	while (len > 0) {
-		printf("expo test = %i\n", int_val % (expo(10, len)));
+		printf("len = %i\n", len);
 		if (len == 1) {
-			temp_int = int_val;
+			int_val = temp_int;
 		} else {
-			temp_int = int_val % (expo(10, len-1));
-			int_val = int_val / (expo(10, len-1));
+			int_val = temp_int / (expo(10, len-1));
+			temp_int = temp_int % (expo(10, len-1));
 		}
 		printf("temp_int = %i\n", temp_int);
+		printf("int_val = %i\n", int_val);
 		*s++ = int_val + 48;
 		len--;
 	}
