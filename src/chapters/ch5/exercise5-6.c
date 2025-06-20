@@ -4,9 +4,9 @@
 #include <stdlib.h>
 
 int get_line(char *, int);
-int tatoi(char *);
-char* titoa(int);
-char* titoa_test(int);
+int atoi_ptr(char *);
+char* itoa_ptr_one(int);
+char* itoa_ptr_two(int);
 char* reverse(char *);
 int strindex(char *, char *);
 int getop(char *);
@@ -27,24 +27,32 @@ int main()
 	input_length = get_line(blank_string, 100);
 	printf("\nblank_string after getting input: %s\n", blank_string);
 	printf("blank_string length: %i\n", input_length);
-	// Test atoi()
+	// Test atoi_ptr()
 	char *atoi_test_1 = "394";
 	printf("atoi_test_1 = %s\n", atoi_test_1);
-	int atoi_result_1 = tatoi(atoi_test_1);
+	int atoi_result_1 = atoi_ptr(atoi_test_1);
 	printf("atoi_result_1 = %i\n", atoi_result_1);
 	char *atoi_test_2 = "-438923";
 	printf("atoi_test_2 = %s\n", atoi_test_2);
-	int atoi_result_2 = tatoi(atoi_test_2);
+	int atoi_result_2 = atoi_ptr(atoi_test_2);
 	printf("atoi_result_2 = %i\n", atoi_result_2);
+	// Test itoa_ptr()
 	int itoa_test_1 = 394;
-	printf("itoa_test_1 = %i\n", itoa_test_1);
-	char *itoa_result_1 = titoa(itoa_test_1);
-	printf("itoa_result_1 = %s\n", itoa_result_1);
-	//printf("expo test expo(10, 2) = %i\n", 394 % (expo(10, 2)));
-	int itoa_test_2 = 394;
-	printf("itoa_test_2 = %i\n", itoa_test_2);
-	char *itoa_result_2 = titoa_test(itoa_test_2);
-	printf("itoa_result_2 = %s\n", itoa_result_2);
+	int itoa_test_2 = -438923;
+	// Test itoa_ptr_one()
+	printf("itoa_one_test_1 = %i\n", itoa_test_1);
+	char *itoa_one_result_1 = itoa_ptr_one(itoa_test_1);
+	printf("itoa_one_result_1 = %s\n", itoa_one_result_1);
+	printf("itoa_one_test_2 = %i\n", itoa_test_2);
+	char *itoa_one_result_2 = itoa_ptr_one(itoa_test_2);
+	printf("itoa_one_result_2 = %s\n", itoa_one_result_2);
+	// Test itoa_ptr_two()
+	printf("itoa_two_test_1 = %i\n", itoa_test_1);
+	char *itoa_two_result_1 = itoa_ptr_two(itoa_test_1);
+	printf("itoa_two_result_1 = %s\n", itoa_two_result_1);
+	printf("itoa_two_test_2 = %i\n", itoa_test_2);
+	char *itoa_two_result_2 = itoa_ptr_two(itoa_test_2);
+	printf("itoa_two_result_2 = %s\n", itoa_two_result_2);
 }
 
 int get_line(char *s, int limit)
@@ -72,7 +80,7 @@ int expo(int base, int exp)
 	return total;
 }
 
-int tatoi(char *s)
+int atoi_ptr(char *s)
 {
 	int c;
 	int len = 0;
@@ -106,14 +114,22 @@ int tatoi(char *s)
 	return final_val;
 }
 
-char* titoa(int n)
+char* itoa_ptr_one(int n)
 {
 	char temp_string[20];
 	char *s = temp_string;
+	char sign;
 	int p;
 	char c;
 	int len = 0;
 
+	// Get the sign
+	if (n < 0) {
+		sign = '-';
+		n *= -1;
+	} else {
+		sign = ' ';
+	}
 	// Copy into a string - copies it in reverse
 	while ((p = n % 10) > 0) {
 		c = p + 48;
@@ -125,49 +141,54 @@ char* titoa(int n)
 	// Reverse temp_string into final_string
 	char final_string[20];
 	char *final_s = final_string;
-	for (int i = 0, e = len-1; i < len; i++, e--) {
-		*(final_s + i) = *(temp_string + e);
+	for (int i = 0, e = len-1; i < len; i++) {
+		if (i == 0 && sign == '-') {
+			*final_s = '-';
+			len++;
+		} else {
+			*(final_s + i) = *(temp_string + e);
+			e--;
+		}
 	}
 	*(final_s + len) = '\0';
 	return final_s;
 
 }
 
-// TODO:
-
-// Problems:
-// exponent in % is NOT working
-
-// I don't know the length of int n
-// 	so, I still have two loops
-
-
-char* titoa_test(int n)
+char* itoa_ptr_two(int n)
 {
 	int int_val = n;
 	int temp_int = n;
 	char string_val[20];
 	char *s_start = string_val;
 	char *s = string_val;
+	char sign;
 	int len = 0;
 
+	// Get the sign
+	if (temp_int < 0) {
+		sign = '-';
+		temp_int = n *= -1;
+	} else {
+		sign = ' ';
+	}
 	// Get length of string
 	while ((n = n / 10) > 0) {
 		len++;
 	}
 	len++;
-	printf("len = %i\n", len);
+	// Add in sign
+	if (sign == '-') {
+		*s++ = '-';
+	}
 	// Copy each int into a string
 	while (len > 0) {
-		printf("len = %i\n", len);
 		if (len == 1) {
 			int_val = temp_int;
 		} else {
 			int_val = temp_int / (expo(10, len-1));
 			temp_int = temp_int % (expo(10, len-1));
 		}
-		printf("temp_int = %i\n", temp_int);
-		printf("int_val = %i\n", int_val);
 		*s++ = int_val + 48;
 		len--;
 	}
