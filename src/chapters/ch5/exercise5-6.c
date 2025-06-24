@@ -157,37 +157,29 @@ char* itoa_ptr_one(int n)
 
 char* itoa_ptr_two(int n)
 {
-	int int_val = n;
-	int temp_int = n;
+	int n_copy = n;
 	char string_val[20];
-	char *s_start = string_val;
 	char *s = string_val;
-	char sign;
-	int len = 0;
+	char *s_start = string_val;
+	int len = 1; 		//TODO - Find way to not set this to 1, but 0
+	int int_val;
 
-	// Get the sign
-	if (temp_int < 0) {
-		sign = '-';
-		temp_int = n *= -1;
-	} else {
-		sign = ' ';
+	// Get the sign, and if - add it to start of string
+	if (n_copy < 0) {
+		*s++ = '-';
+		n_copy = n *= -1;
 	}
 	// Get length of string
 	while ((n = n / 10) > 0) {
 		len++;
 	}
-	len++;
-	// Add in sign
-	if (sign == '-') {
-		*s++ = '-';
-	}
 	// Copy each int into a string
 	while (len > 0) {
 		if (len == 1) {
-			int_val = temp_int;
+			int_val = n_copy;
 		} else {
-			int_val = temp_int / (expo(10, len-1));
-			temp_int = temp_int % (expo(10, len-1));
+			int_val = n_copy / (expo(10, len-1));
+			n_copy = n_copy % (expo(10, len-1));
 		}
 		*s++ = int_val + 48;
 		len--;
