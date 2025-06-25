@@ -53,6 +53,12 @@ int main()
 	printf("itoa_two_test_2 = %i\n", itoa_test_2);
 	char *itoa_two_result_2 = itoa_ptr_two(itoa_test_2);
 	printf("itoa_two_result_2 = %s\n", itoa_two_result_2);
+	// Test reverse()
+	char reverse_test_1[20] = "testone";
+	char *reverse_test_1_result = reverse_test_1;
+	printf("reverse_test_1 = %s\n", reverse_test_1);
+	reverse_test_1_result = reverse(reverse_test_1);
+	printf("reverse_test_1_result = %s\n", reverse_test_1_result);
 }
 
 int get_line(char *s, int limit)
@@ -116,12 +122,12 @@ int atoi_ptr(char *s)
 
 char* itoa_ptr_one(int n)
 {
+	char sign;
+	int len = 0;
 	char temp_string[20];
 	char *s = temp_string;
-	char sign;
-	int p;
-	char c;
-	int len = 0;
+	char final_string[20];
+	char *final_s = final_string;
 
 	// Get the sign
 	if (n < 0) {
@@ -131,16 +137,13 @@ char* itoa_ptr_one(int n)
 		sign = ' ';
 	}
 	// Copy into a string - copies it in reverse
-	while ((p = n % 10) > 0) {
-		c = p + 48;
-		*s++ = c;
+	while ((n % 10) > 0) {
+		*s++ = (n % 10) + 48;
 		len++;
 		n /= 10;
 	}
 	*s = '\0';
 	// Reverse temp_string into final_string
-	char final_string[20];
-	char *final_s = final_string;
 	for (int i = 0, e = len-1; i < len; i++) {
 		if (i == 0 && sign == '-') {
 			*final_s = '-';
@@ -152,7 +155,6 @@ char* itoa_ptr_one(int n)
 	}
 	*(final_s + len) = '\0';
 	return final_s;
-
 }
 
 char* itoa_ptr_two(int n)
@@ -186,5 +188,20 @@ char* itoa_ptr_two(int n)
 	}
 	*s = '\0';
 	return s_start;
+}
 
+char* reverse(char *s)
+{
+	char *temp_s = s;
+	int len = 0;
+
+	// Get length of string
+	while (*s != '\0') {
+		len++;
+		s++;
+	}
+	while (len > 0) {
+		*temp_s++ = *s--;
+	}
+	return s;
 }
