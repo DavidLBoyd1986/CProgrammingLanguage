@@ -8,6 +8,7 @@ int atoi_ptr(char *);
 char* itoa_ptr_one(int);
 char* itoa_ptr_two(int);
 char* reverse(char *);
+char* recursive_reverse(char *, char *);
 int strindex(char *, char *);
 int getop(char *);
 int expo(int, int);
@@ -55,10 +56,25 @@ int main()
 	printf("itoa_two_result_2 = %s\n", itoa_two_result_2);
 	// Test reverse()
 	char reverse_test_1[20] = "testone";
-	char *reverse_test_1_result = reverse_test_1;
+	char *reverse_test_1_result;
 	printf("reverse_test_1 = %s\n", reverse_test_1);
 	reverse_test_1_result = reverse(reverse_test_1);
 	printf("reverse_test_1_result = %s\n", reverse_test_1_result);
+	char reverse_test_2[50] = "reverse all of this as a test";
+	char *reverse_test_2_result;
+	printf("reverse_test_2 = %s\n", reverse_test_2);
+	reverse_test_2_result = reverse(reverse_test_2);
+	printf("reverse_test_2_result = %s\n", reverse_test_2_result);
+	// Test recursivie_reverse()
+	char *rr_test_1_result;
+	char new_s[50];
+	printf("rr_test_1 = %s\n", reverse_test_1);
+	rr_test_1_result = recursive_reverse(reverse_test_1, new_s);
+	printf("rr_test_1_result = %s\n", rr_test_1_result);
+	char *rr_test_2_result;
+	printf("rr_test_2 = %s\n", reverse_test_2);
+	rr_test_2_result = recursive_reverse(reverse_test_2, new_s);
+	printf("rr_test_2_result = %s\n", rr_test_2_result);
 }
 
 int get_line(char *s, int limit)
@@ -202,12 +218,22 @@ char* reverse(char *s)
 	// Create the return string
 	char return_string[len];
 	char *return_string_pntr = return_string;
-	s--;
-	printf("len = %i\n", len);
 	while (len-- > 0) {
-		printf("s(c) = %c\n", *s);
-		*return_string_pntr++ = *s--;
+		*return_string_pntr++ = *--s;
 	}
+	// Reset pntr and return it
 	return_string_pntr = return_string;
 	return return_string_pntr;
+}
+
+char* recursive_reverse(char *s, char *new_s)
+{
+	char c;
+
+	printf("s = %s\n", s);
+	if ((c = *s++) != '\0')
+		recursive_reverse(s, new_s);
+	*new_s++ = c;
+	printf("new_s = %s\n", new_s);
+	return new_s;
 }

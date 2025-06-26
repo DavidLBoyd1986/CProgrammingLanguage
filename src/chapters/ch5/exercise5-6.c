@@ -55,10 +55,15 @@ int main()
 	printf("itoa_two_result_2 = %s\n", itoa_two_result_2);
 	// Test reverse()
 	char reverse_test_1[20] = "testone";
-	char *reverse_test_1_result = reverse_test_1;
+	char *reverse_test_1_result;
 	printf("reverse_test_1 = %s\n", reverse_test_1);
 	reverse_test_1_result = reverse(reverse_test_1);
 	printf("reverse_test_1_result = %s\n", reverse_test_1_result);
+	char reverse_test_2[50] = "reverse all of this as a test";
+	char *reverse_test_2_result;
+	printf("reverse_test_2 = %s\n", reverse_test_2);
+	reverse_test_2_result = reverse(reverse_test_2);
+	printf("reverse_test_2_result = %s\n", reverse_test_2_result);
 }
 
 int get_line(char *s, int limit)
@@ -192,7 +197,6 @@ char* itoa_ptr_two(int n)
 
 char* reverse(char *s)
 {
-	char *temp_s = s;
 	int len = 0;
 
 	// Get length of string
@@ -200,8 +204,14 @@ char* reverse(char *s)
 		len++;
 		s++;
 	}
-	while (len > 0) {
-		*temp_s++ = *s--;
+	// Create the return string
+	char return_string[len];
+	char *return_string_pntr = return_string;
+	while (len-- > 0) {
+		*return_string_pntr++ = *--s;
 	}
-	return s;
+	// Reset pntr and return it
+	return_string_pntr = return_string;
+	return return_string_pntr;
 }
+
