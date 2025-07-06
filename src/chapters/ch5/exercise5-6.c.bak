@@ -3,6 +3,9 @@
 #include <math.h>
 #include <stdlib.h>
 
+#define TRUE 1
+#define FALSE 0
+
 int get_line(char *, int);
 int atoi_ptr(char *);
 char* itoa_ptr_one(int);
@@ -55,10 +58,22 @@ int main()
 	printf("itoa_two_result_2 = %s\n", itoa_two_result_2);
 	// Test reverse()
 	char reverse_test_1[20] = "testone";
-	char *reverse_test_1_result = reverse_test_1;
+	char *reverse_test_1_result;
 	printf("reverse_test_1 = %s\n", reverse_test_1);
 	reverse_test_1_result = reverse(reverse_test_1);
 	printf("reverse_test_1_result = %s\n", reverse_test_1_result);
+	char reverse_test_2[50] = "reverse all of this as a test";
+	char *reverse_test_2_result;
+	printf("reverse_test_2 = %s\n", reverse_test_2);
+	reverse_test_2_result = reverse(reverse_test_2);
+	printf("reverse_test_2_result = %s\n", reverse_test_2_result);
+	// Test strindex()
+	char strindex_test[40] = "This is a really long string";
+	char strindex_test_find[40] = "ally";
+	printf("strindex_test = %s\n", strindex_test);
+	printf("strindex_test_find = %s\n", strindex_test_find);
+	int strindex_result = strindex(strindex_test, strindex_test_find);
+	printf("strindex_result = %i\n", strindex_result);
 }
 
 int get_line(char *s, int limit)
@@ -202,12 +217,24 @@ char* reverse(char *s)
 	// Create the return string
 	char return_string[len];
 	char *return_string_pntr = return_string;
-	s--;
-	printf("len = %i\n", len);
 	while (len-- > 0) {
-		printf("s(c) = %c\n", *s);
-		*return_string_pntr++ = *s--;
+		*return_string_pntr++ = *--s;
 	}
+	// Reset pntr and return it
 	return_string_pntr = return_string;
 	return return_string_pntr;
 }
+
+int strindex(char *s, char *t)
+{
+	int i, j, k;
+
+	for (i = 0; *(s + i) != '\0'; i++) {
+		for (j = i, k = 0; *(t + k) != '\0' && *(s + j) == *(t + k); j++, k++)
+			; // Loops through a section separately to find a match
+		if (k > 0 && *(t + k) == '\0')
+			return i;
+	}
+	return -1;
+}
+

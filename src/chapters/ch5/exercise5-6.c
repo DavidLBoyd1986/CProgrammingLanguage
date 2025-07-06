@@ -3,13 +3,15 @@
 #include <math.h>
 #include <stdlib.h>
 
+#define TRUE 1
+#define FALSE 0
+
 int get_line(char *, int);
 int atoi_ptr(char *);
 char* itoa_ptr_one(int);
 char* itoa_ptr_two(int);
 char* reverse(char *);
 int strindex(char *, char *);
-int getop(char *);
 int expo(int, int);
 
 /* getline: get line into s, return length */
@@ -64,6 +66,13 @@ int main()
 	printf("reverse_test_2 = %s\n", reverse_test_2);
 	reverse_test_2_result = reverse(reverse_test_2);
 	printf("reverse_test_2_result = %s\n", reverse_test_2_result);
+	// Test strindex()
+	char strindex_test[40] = "This is a really long string";
+	char strindex_test_find[40] = "ally";
+	printf("strindex_test = %s\n", strindex_test);
+	printf("strindex_test_find = %s\n", strindex_test_find);
+	int strindex_result = strindex(strindex_test, strindex_test_find);
+	printf("strindex_result = %i\n", strindex_result);
 }
 
 int get_line(char *s, int limit)
@@ -215,3 +224,17 @@ char* reverse(char *s)
 	return return_string_pntr;
 }
 
+int strindex(char *s, char *t)
+{
+	int i, j, k;
+
+	for (i = 0; *(s + i) != '\0'; i++) {
+		for (j = i, k = 0; *(t + k) != '\0' && *(s + j) == *(t + k); j++, k++)
+			; // Loops through a section separately to find a match
+		if (k > 0 && *(t + k) == '\0')
+			return i;
+	}
+	return -1;
+}
+
+// I'm not changing getop to pointers, it's just not worth the trouble.
