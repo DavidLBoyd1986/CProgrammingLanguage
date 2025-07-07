@@ -1,0 +1,356 @@
+				Git Notes
+
+Overview:
+
+This will be a simple list of important git commands I learned reading pro-git.
+
+
+-------------------------------------------------------------------
+
+git stage/commit commands:
+-------------------------
+- git commits are snapshots of your project, that you can revert to, and even compare snapshots
+
+git commit - Opens commit message
+
+git commit -v - Puts the diff of our changes into the editor when adding commit message
+
+git commit -a - Stages all modified files before committing, but it doesn't add untracked files.
+
+git commit -m "commit messge"- Add the commit message as an argument
+
+git commit -am "message"
+	- add all staged files, and put message inline
+
+git commit --amend
+	- allows you to update the previous commit
+	- adds all files in the staging area, and lets you add a new commit message
+	- only works on local commits that haven't been pushed anywhere
+	- entirely replaces the last local commit
+
+git restore --staged <file>
+	- unstages a staged file
+
+git restore <file>
+	- discard changes to a modified (unstaged) file
+	- permanently lose all changes
+
+git status - Shows status of files in current repo:
+	- not tracked
+	- unmodified
+	- modified
+	- staged
+
+git status -s  - Shows status in short format
+	- Left column is Staged area, Right column is working tree
+
+git add <file> - Stage the new/modified file so it is included in next commit
+
+git rm <file> - Stage a deleted file, so it is removed from the next commit
+
+git rm -f <file> - If the file was modified or staged, the -f is required to remove it
+
+git rm --cached <file> - Remove file from your staging area, but doesn't delete the file from the working tree.
+
+- The '\' is required in front of the wildcare '*' because git does its own filename expansion
+git rm log/\*.log
+git rm  \*~
+
+git mv <file-1> <file-2>
+
+	- Above is equivalent of: mv <file-1> <file-1> ; git rm <file-1> ; git add <file-2>
+	- There is literally no other benefit to 'git mv' it is just shorthand for the 3 commands above.
+-----------------------------------------------------------------
+	
+git branching commands:
+-----------------
+
+git branch - show branches, same as -l
+
+git branch -a - Show all branches, even remote branches
+
+git branch -vv - show remote tracking branch and commit pointed to.
+	- Doesn't 'fetch' new data from remote
+
+git branch <new-branch>
+
+git branch <old-branch> <new-branch>
+
+git branch -u <remote/branch> - set upstream branch
+
+
+git branch --merged - show merged branches
+
+git branch --no-merged - show branches that haven't been merged
+
+git branch --move <old-branch-name> <new-branch-name>
+
+git checkout -b <new-branch>
+
+git checkout -b <new-branch> <local-branch> - create branch off <local-branch>
+git checkout -b <new-branch> <remote/branch> - automatically sets up-stream branch
+
+git checkout --track <remote/branch>
+	- checkouts out a remote branch to edit locally
+
+git switch -c <new-branch>
+	how to get out of detached head state
+
+git merge <branch> - Merges <branch> into current branch
+
+git merge origin/remote-branch - This will merge remote branches into you local branch
+
+git rebase master - rebase the current branch onto the master branch
+
+git rebase <base-branch> <topic-branch> - rebase <topic-branch> onto <base-branch>
+
+git rebase --onto master server client
+	- rebase 'client' a branch off 'server' onto 'master
+	- This will leave the 'server' branch alone, but is required since 'client' is branched off 'server'
+	- Since 'server' has commits 'client' contains, this is how to rebase 'client' onto master
+
+Merge Types:
+
+- fast-forward - Merges that are 'fast-forwards' are when the merged branch is in front of current branch
+	- This merge merely moves the pointer of main/master forward, to the merged branch
+
+	-Ex: *-*-*-*-*
+
+- merge-commits - Merges that merges a divergent branch, into a master that has new commits.
+	- Uses the Common ancestor of the commits, where the branch diverged, and....
+	- The snapshot of the current branch and branch being merged.
+	- Makes a whole new commit, where as 'fast-forward' does not make a new commit
+	
+	- Ex: *-*-*-*         *-*-*-*-*
+		 \               \   /
+		  *-*		  *-*
+
+- merge-conflicts - If merging branches that both have commited changes to the same file,
+	- the merge conflict must be resolved before the commit can be completed.
+	- 'git status' will indicate the files that have merge conflicts
+	- open the file two see the two different versions, one on top, other below the '======'
+	- Make the necessary changes to the file, and save it, to merge the commits
+
+	- NOTE - There should be other ways to view the merge-conflicted files, such as diff.
+		- git mergetool - enter name of tool you want to use to resolve merge conflict
+
+	- Once all the merge-conflicted files are resolved, to finish the commit, run:
+		- 'git add <file>'
+		- 'git commit'
+		- It will automatically add a line about resolving the merge commit.
+
+Rebasing:
+
+To rebase, checkout the branch you want 'rebased' onto another branch
+
+For example, to rebase 'rb-branch' onto 'master':
+
+	git checkout rb-branch
+	git rebase master
+
+Rebasing takes all the commits from one branch, and applies them in order to the other branch
+Now you can 'git merge' and it does a fast-forward merge, and leaves a linear commit history.
+There is no divergence, as it deletes the rebased branch.
+
+Rebase vs Merging:
+
+The end result is the same for both, there is a new commit that combines both branches.
+Only the 'git history' and 'git log' is different.
+Merging can leave diverging branches, as merge commits will have two parents.
+Rebasing causes all merges to be fast-forwards, as it re-applies branching commits as a new linear commit.
+
+IMPORTANT - DO NOT REBASE COMMITS THAT EXIST OUTSIDE YOUR REPOSITORY!!!
+	- Other people may have work based off those commits.
+	- Rebasing will delete the commit, and cause serious issues
+
+-----------------------------------------------------------------
+git diff commands:
+-----------------
+
+git diff - shows changed between working directory and staging area.
+	- i.e. shows diff for unstaged changes. Changed working directory, and compares to staging area
+
+	- If you staged all your changes, this will show nothing
+
+git diff --staged - Shows chages between what you staged to what was in last commit (current remote repo)
+	--cached - Same flag as --staged
+
+-----------------------------------------------------------------
+
+git log commands:
+----------------
+
+git log - show the commit history
+
+git log <branch> - show the commit history for a branch you aren't on
+
+git log --all - show entire commit history
+
+	--NOTE - git log only shows commit history up to the branch you are on.
+		 It doesn't show commits not part of your current branch.
+
+git log --oneline --decorate --graph --all
+	- show how branches have diverged
+
+git log -p -2
+
+	-p - show the diff of each commit
+
+	-2 - show only the last two entries
+
+	--stat - gives abbreviated stats for each commit
+
+	--pretty=oneline , --pretty=short/full/fuller
+
+git log --pretty=format:"%h - %an, %ar : %s"
+
+	- Prints git log 'commits' in a specific format.
+	- Look up all the "git log --pretty=format" specifiers
+	- there are 'abbreviated commit hash', 'Author name', 'Author date', 'Subject'
+
+git log --pretty=format:"%h %s" --graph
+
+	--graph shows your branch and merge history
+
+git log --since=2.weeks / 2.days / 2025-1-15 / --after is same
+	--until / --before
+
+git log --author=Linus	- only shows commits where author name contains 'Linus'
+
+	--grep="pattern" - Search the entire commit for a value
+
+	- Can include multiple --author and --grep.
+
+	--all-match - requires all of the --author and --grep match
+
+git log -S "print_array" - Show commits where diff changes the amount of a "string"
+	- Useful for finding new uses of function calls.
+
+git log -- path/to/file
+	- Always the last option
+	- Only show commits that made changes to "path/to/file"
+
+	--no-merges - hides merge commits. IMPORTANT
+
+
+NOTE - Author originally wrote the code, and Committer is the core team member who applied the patch
+
+------------------------------------------------------------------
+
+git remote commands:
+-------------------
+
+@{u} and @{upstream} are shorthand for the remote tracking branch you are on
+
+git remote - shows remote repositories configured
+
+	-v - shows URL and other data about remote repos
+	
+git remote <repo>
+
+git remote show <remote>
+
+git remote add <shortname> <url>
+	- add a remote repo as <shortname>, with the remote repo <url>
+
+git remote rename <current-repo-name> <new-repo-name>
+
+git remote remove <repo-name>
+
+IMPORTANT - 'git fetch' doesn't update checked out branch
+	- 'git pull' is actually 'git fetch; git merge' for the remote tracking branch
+	- So, it fetchs from the remote tracking branch, 
+	- and merges it into the current branch (working directory)
+	- 'git fetch; git merge' is the preferred method over 'git pull'
+
+git fetch - pulls data from the remote repository
+	- Doesn't automatically merge data, have to merge manually
+
+git fetch <remote-repo>
+
+git fetch --all
+
+IMPORTANT - Fetching won't create local copies of the branches:
+	- It will create 'remote/branch'
+	- To create local copies run the command below
+	- Run 'git branch -a' to see remote branches
+
+git checkout -b <local-branch> <origin/remote-branch>
+	- create a local branch from a fetched remote branch
+
+git pull - pulls data from the remote repository
+	- Does automatically merge data
+
+git pull <repo>
+
+git push <repo> <branch> - Pushes commits to local <branch> to remote <repo>
+
+	git push origin test-branch
+
+	- just 'git push' will push checked out branch to configured remote repo
+
+git push origin local-branch:remote-branch
+	- This will push a local branch to a different remote branch
+
+git push --set-upstream origin <new-branch> - push a new branch to remote
+	--set-upstream is same as -u
+
+git push origin --delete <old-branch> - delete a branch
+
+IMPORTANT - origin isn't a special remote name, it can be named anything.
+
+git clone <remote-repo-url>
+
+git clone <remote-repo-url> -o <name> - Changes remote name from origin
+
+git clone <user>@<server>:/path/to/project.git
+	- Git clone using SSH
+
+git clone --bare <repo> <repo>.git
+	- Clones a project to a bare-repo, that has no working directory, only a .git file
+-----------------------------------------------------------------
+
+git tag commands:
+-----------------
+
+git tag - list all tag
+
+git tag -l "v1.8.5*" - list tags that match a specific pattern
+
+	-l - lists tags, only required if using a pattern
+
+git tag -a <tag-name> -m <tag-message>
+	git tag -a v4.0.0 -m "This is version 4.0.0?
+	-a - Creates an Annotated Tag, which is stored as a full object.
+
+git tag <tag-name>
+	Creates a light-weight tag, only a pointer to a commit checksum, no other data like annotated tags
+
+git push origin <tag>
+git push <remote> <tag>
+	Tags are not pushed automatically, but need pushed explicitly.
+
+git push origin --tags
+	Push all tags to the remote
+
+git tag -d <tag>
+	Delete a tag locally
+
+git push <remote> :refs/tags/<tagname>
+git push origin :refs/tags/v4.0.0
+	Delete tags on a remote repo
+
+git push origin --delete <tag>
+	The normal way to delete a tag on the remote server
+
+git checkout <tag>
+	Checkouts the files related to a Tag
+-----------------------------------------------------------------
+
+misc git commands:
+-----------------
+
+git show <object>
+	<object> can be - remote, branch, tag, etc..
+
+git config --global credential.helper cache - Couldn't get this to work

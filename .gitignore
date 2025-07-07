@@ -1,0 +1,24 @@
+ignore_this_file.txt
+
+*.out
+
+# Notes:
+
+# Repositories can have as many .gitignore files as they want
+# .gitignore files only apply to their current directory and sub-directories.
+
+# Start patterns with a '/' to avoid recursion
+
+# End patterns with a '/' to specify a directory
+
+# Negate patterns by starting it with an !
+
+# glob patterns are supported
+
+# Examples:
+
+# *.[oa] # Ignores all files that end with .o or .a
+
+# doc/**/*.pd # Ignore all .pdf files in the doc/ directory
+
+# /TODO # only ignore the TDO file in the current directoy, not subdir/TODO

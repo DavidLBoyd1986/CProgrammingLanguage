@@ -1,0 +1,9 @@
+
+Pointers * uses
+
+int* radius_ptr
+int *num_ptr
+
+What is the difference between the above, I used both.
+Answer - They are functionally the same.
+
