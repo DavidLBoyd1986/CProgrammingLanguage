@@ -81,7 +81,7 @@ int get_line(char *s, int limit)
 	int len = 0;
 	char *s_start;
 
-	while ((c = getchar()) != '\n' || c != EOF || c != '\0') {
+	while ((c = getchar()) != '\n' || c != EOF || c != '\0' || c != '`') {
 		*s++ = c;
 		len++;
 		if (c == '`')
