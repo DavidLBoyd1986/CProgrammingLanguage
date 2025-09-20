@@ -108,8 +108,8 @@ void month_day(int year, int yearday, int *pmonth, int *pday)
 		return;
 	}
 	leap = year%4 == 0 && year%100 != 0 || year%400 == 0;
-	for (i = 1; yearday > daytab[leap][i]; i++)
-		yearday -= daytab[leap][i];
+	for (i = 1; yearday > *(*(daytab + leap) + i); i++)
+		yearday -= *(*(daytab + leap) + i);
 	*pmonth = i;
 	*pday = yearday;
 }

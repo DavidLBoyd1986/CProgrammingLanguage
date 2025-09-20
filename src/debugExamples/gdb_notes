@@ -1,0 +1,65 @@
+
+GDB Notes
+---------
+
+Explains how to use GDB to debug C programs
+
+--------------------
+
+Creating a debug file:
+
+  gcc -g file.c -o file_debug
+
+  -g     - produces debugging information in the OS¹s native format (stabs, COFF, XCOFF, or DWARF 2).
+  -ggdb  - produces debugging information specifically intended for gdb.
+  -ggdb3 - produces extra debugging information, for example: including macro definitions.
+  -ggdb - by itself without specifying the level defaults to -ggdb2 (i.e., gdb for level 2).
+
+Open the created debug file:
+
+  gdb file_debug
+
+--------------------- 
+
+gdb commands:
+
+  help			- get information about other commands
+  help breakpoints
+
+  set args arg1 arg2	- Set the arguments to be passed to the program being debugged
+
+  run			- run the program
+
+  list			- see the program, with line numbers
+
+  break			- Set break points in the program
+  break 5 		- Set break point at line 5
+  break func_name 	- Set break points at the start of functions
+  break if var == 8	- Can break based on conditionals
+
+  del 5			- delete break points, in example if it was at line 5
+
+  print			- print variables
+  print var_name	- print a variable name
+  print *var_name 	- see the value of pointer variable
+
+  next 			- Go to the next 'active' line after a break point
+			- next does NOT go into functions
+
+  step  	    	- steps line by line in code, steps into function
+
+  continue     		- Let the program finish, no more breakpoints
+
+  finish		- Step out of a function
+
+  frame			- Get the line number and current function
+
+  info			- Show info
+  info locals		- Show variable info
+  info args		- Show arguments to the function
+  info stack		- Show the current call stack
+
+  watch var_name	- Watch a variable for if it changes
+			- Lasts while the variable is in scope, i.e. variable scoped to a function
+
+

@@ -61,7 +61,6 @@ void writelines(char *lineptr[], int nlines)
 int get_line(char s[], int lim)
 {
 	int c, i;
-	extern char line[];
 
 	for (i = 0; i < lim - 1 && (c = getchar()) != EOF && c != '\n'; ++i)
 		s[i] = c;
