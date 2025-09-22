@@ -38,7 +38,7 @@ int main(int argc, char *argv[]) {
 			if (line[i] == TAB) {
 				/* Calculate spaces needed to reach next tabstop */
 				j = calculate_num_of_spaces(column, tabstops, tabstop_length);
-				for(k = 0; k < j; k++) {
+				for (k = 0; k < j; k++) {
 					putchar(SPACE);
 					column++;
 				}

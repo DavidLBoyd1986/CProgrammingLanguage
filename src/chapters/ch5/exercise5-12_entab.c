@@ -9,11 +9,11 @@ int parse_args(int, char **, int *, int *);
 
 int main(int argc, char *argv[]) {
 
-	int nb, nt, pos, c;
-	nb = 0;		/* num of blanks */
-	nt = 0;		/* num of tabs	 */
-	int m = 4;
-	int n = 1;
+	int nb = 0;		/* num of blanks */
+	int nt = 0;		/* num of tabs	 */
+	int m = 1;
+	int n = 8;
+	int pos, c;
 
 	// set m and n from supplied arguments
 	if (argc > 1 ) {
@@ -27,12 +27,13 @@ int main(int argc, char *argv[]) {
 	for (pos = 1; (c = getchar()) != EOF; ++pos) {
 		
 		if (c == ' ') {
-			if ((pos % TABINC) != 0) {
-				++nb;
-		// TODO - If pos % TABINC == 0 and nb == m
-			} else { 
+			// if pos == m, start tracking spaces
+			// if spaces == n, insert a tab and reset
+			if (pos >= m && pos % n == 0) {
 				++nt;
 				nb = 0;
+			} else {
+				++nb;
 			}
 		} else {
 			while (nt > 0) {
