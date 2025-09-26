@@ -2,26 +2,21 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define TABINC 8
-#define NUM_DEFAULT_TABSTOPS 5
 #define MAXLINE 1000
 #define TAB '\t'
 #define SPACE ' '
 #define TABSPACES 8
-#define MAX_TABSTOPS 20
 
 int parse_args(int, char **, int *, int *);
 int getlines(char line[], int limit);
-int calculate_num_of_spaces(int column, int *tabstops, int tabstop_length);
+int calculate_num_of_spaces(int column, int m, int n);
 
 int main(int argc, char *argv[]) {
 
 	int nb = 0;		/* num of blanks */
 	int nt = 0;		/* num of tabs	 */
 	int m = 1;
-	int n = 8;
-	int tabstop_length;
-	int tabstops[MAX_TABSTOPS];
+	int n = TABSPACES;
 	int i, j, k, column;
 	char line[MAXLINE];
 
@@ -38,7 +33,7 @@ int main(int argc, char *argv[]) {
 		for (i = 0, column = 1; line[i] != '\0'; i++) {
 			if (line[i] == TAB) {
 				/* Calculate spaces needed to reach next tabstop */
-				j = calculate_num_of_spaces(column, tabstops, tabstop_length);
+				j = calculate_num_of_spaces(column, m, n);
 				for (k = 0; k < j; k++) {
 					putchar(SPACE);
 					column++;
@@ -98,17 +93,13 @@ int getlines(char s[], int limit)
 	return i;
 }
 
-int calculate_num_of_spaces(int column, int *tabstops, int tabstop_length)
+int calculate_num_of_spaces(int column, int m, int n)
 {
-	int i;
 
-	/* find next tabsop at or after current column */
-	for (i = 0; i < tabstop_length; i++) {
-		if (tabstops[i] >= column) {
-			return tabstops[i] - column + 1;
-		}
+	if (column < m) {
+		return TABSPACES - ((column -1) % TABSPACES);
 	}
-
-	/* If past all defined tabstops, use regular spacing */
-	return TABSPACES - ((column -1) % TABSPACES);
+	if (column >= m) {
+		return n - ((column -1) % n);
+	}
 }
