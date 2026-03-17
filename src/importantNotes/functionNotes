@@ -13,6 +13,10 @@ main() Function:
 string.h Functions:
 
 	int strlen(char s[])
+	int strcmp(str1, str2)
+
+	IMPORTANT: strcmp() returns 0 if true, which is false in c
+	Must do - if (strcp(str1, str2) == 0) to get correct functionality
 
 stdio.h Functions:
 

@@ -1,0 +1,11 @@
+this
+is
+a
+test
+to
+print
+the
+last
+number
+of
+lines.

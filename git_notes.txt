@@ -235,6 +235,17 @@ git log -- path/to/file
 
 NOTE - Author originally wrote the code, and Committer is the core team member who applied the patch
 
+-----------------------------------------------------------------
+
+git reset commands:
+----------------
+
+git reset --hard HEAD@{1}
+	- Reset to previous commit
+	- --hard resets working directory, and deletes all changes
+	- --soft does not reset working directory, and leaves all changes in subsequent commits as staged changes
+	- --mixed does not reset working directory, and leaves all changes in subsequent commits as unstaged changes
+
 ------------------------------------------------------------------
 
 git remote commands:
