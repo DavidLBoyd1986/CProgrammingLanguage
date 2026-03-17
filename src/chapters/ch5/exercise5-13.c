@@ -7,24 +7,24 @@
 #define ALLOCSIZE 50000
 
 char *lineptr_array[MAX_LINES];
-int lineptr_pos = 0;
 
 int get_line(char *, int, FILE *);
 char *alloc(int);
 
 int main(int argc, char *argv[MAX_LINES])
 {
-	int num_of_lines = 10;
+	long int num_of_lines = 10;
 	FILE *input_ptr;
+	char *endptr;
 
 	if (argc > 1) {
-		for (int i = 1; i < argc; i++) {
-			if (strcmp(argv[i], "-n") == 0) {
-				num_of_lines = atoi(argv[i++]);
-			} else if (argv[i][0] != '-') {
-				input_ptr = fopen(argv[i], "r");
+		for (int a = 1; a < argc; a++) {
+			if (strcmp(argv[a], "-n") == 0) {
+				num_of_lines = strtol(argv[++a], &endptr, 10);
+			} else if (argv[a][0] != '-') {
+				input_ptr = fopen(argv[a], "r");
 			} else {
-				printf("Invalid argument: %s\n", argv[i]);
+				printf("Invalid argument: %s\n", argv[a]);
 				return EXIT_FAILURE;
 			}
 		}
@@ -45,11 +45,11 @@ int main(int argc, char *argv[MAX_LINES])
 			line[n-1] = '\0'; /* delete '\n' */
 			strcpy(temp_p, line); /* Copy line to alloc string */
 			lineptr_array[i] = temp_p;
-			lineptr_pos++;
+			nlines++;
 		}
 	}
 
-	for (int i = 0; i < lineptr_pos; i++) {
+	for (int i = 0; i < num_of_lines; i++) {
 		printf("%s\n", lineptr_array[i]);
 	}
 }
